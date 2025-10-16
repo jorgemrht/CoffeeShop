@@ -2,9 +2,17 @@ import SwiftUI
 
 public struct RootView: View {
     
-    public init () { }
-    
+    @Environment(AppState.self) private var appState
+    public init() {}
+
     public var body: some View {
-        Text("Hello World!!")
+        Group {
+            if appState.isLoggedIn {
+                //
+            } else {
+                //
+            }
+        }
+        .animation(.default, value: appState.isLoggedIn)
     }
 }
