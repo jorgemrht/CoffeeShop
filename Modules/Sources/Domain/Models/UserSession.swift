@@ -1,7 +1,7 @@
-//
-//  UserSession.swift
-//  CoffeShopModules
-//
-//  Created by jorge on 16/10/25.
-//
-
+public struct UserSession: Sendable {
+    public let token: String
+    
+    public init(token: String) {
+        self.token = token
+    }
+}

@@ -1,7 +1,4 @@
-//
-//  AuthRepository.swift
-//  CoffeShopModules
-//
-//  Created by jorge on 16/10/25.
-//
 
+public protocol AuthRepository: Sendable {
+    func login(email: String, password: String) async throws -> UserSession
+}
