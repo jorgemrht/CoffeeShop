@@ -1,9 +1,9 @@
 import Foundation
 
 public extension JSONDecoder {
-    static func apiDefaultJSONDecoder() -> JSONDecoder {
-        let d = JSONDecoder()
-        d.keyDecodingStrategy = .convertFromSnakeCase
-        return d
+    static func apiDefault() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
     }
 }

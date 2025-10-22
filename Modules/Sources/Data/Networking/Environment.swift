@@ -14,9 +14,15 @@ public enum Environment {
     public var baseURL: URL {
         switch self {
         case .staging:
-            return URL(string: "https://staging.api.myapp.com")!
+            guard let url = URL(string: "https://staging.api.myapp.com") else {
+                fatalError("Invalid staging URL")
+            }
+            return url
         case .production:
-            return URL(string: "https://api.myapp.com")!
+            guard let url = URL(string: "https://api.myapp.com") else {
+                fatalError("Invalid production URL")
+            }
+            return url
         }
     }
 }

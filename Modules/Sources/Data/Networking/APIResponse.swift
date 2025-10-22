@@ -13,21 +13,31 @@ public struct APIResponse: Sendable {
     }
 
     public var statusCode: Int { response.statusCode }
-
-    public func serverError(using decoder: JSONDecoder = JSONDecoder()) -> ServerErrorDTO? {
-        try? decoder.decode(ServerErrorDTO.self, from: data)
+    
+    var serverError: ServerErrorDTO? {
+        try? JSONDecoder().decode(ServerErrorDTO.self, from: data)
     }
 
     @discardableResult
-    public func validate(using decoder: JSONDecoder = JSONDecoder()) throws -> Self {
+    public func validate() throws -> Self {
         guard (200..<300).contains(statusCode) else {
-            throw APIError.serverError(
-                status: statusCode,
-                data: data,
-                server: serverError(using: decoder)
-            )
+            throw APIError.serverError(self)
         }
+        
         return self
+    }
+}
+
+public extension APIResponse {
+    func decoded<T: Decodable>(
+        _ type: T.Type = T.self,
+        using decoder: JSONDecoder = .apiDefault()
+    ) throws -> T {
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw APIError.decodingFailed(error)
+        }
     }
 }
 
@@ -56,21 +66,5 @@ extension APIResponse: CustomDebugStringConvertible {
             msg += "<\(data.count) bytes>"
         }
         return msg
-    }
-}
-
-public extension APIResponse {
-    func decoded<T: Decodable>(
-        _ type: T.Type = T.self,
-        using decoder: JSONDecoder = .apiDefaultJSONDecoder()
-    ) throws -> T {
-        do {
-            return try decoder.decode(T.self, from: data)
-        } catch let e as DecodingError {
-            throw APIError.decodingFailed(e)
-        } catch {
-            let ctx = DecodingError.Context(codingPath: [], debugDescription: error.localizedDescription)
-            throw APIError.decodingFailed(.dataCorrupted(ctx))
-        }
     }
 }
