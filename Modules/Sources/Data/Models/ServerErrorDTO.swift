@@ -1,5 +1,4 @@
-public struct ServerErrorDTO: Decodable, Sendable {
-    public let code: String?
+public struct ServerErrorDTO: Codable {
+    public let identifier: String?
     public let message: String?
-    public let details: [String:[String]]?
 }

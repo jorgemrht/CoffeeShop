@@ -2,20 +2,24 @@ import Domain
 import Foundation
 
 public struct AuthRepositoryImpl: AuthRepository, Sendable {
-  
-    private let api: APIService
-    public init(api: APIService) { self.api = api }
+
+    private let networkClient: NetworkClient
+    
+    init(networkClient: NetworkClient) {
+        self.networkClient = networkClient
+    }
 
     public func login(email: String, password: String) async throws -> UserSession {
         do {
-            let response = try await api.post(
-                AuthEndpoints.login(email: email, password: password),
-                body: LoginRequestDTO(email: email, password: password)
+            let response = try await networkClient.request(
+                LoginEndpoints.login(email: email, password: password).endpoint
             )
-            let dto: LoginResponseDTO = try response.decoded(LoginResponseDTO.self)
-            return UserSession(dto)
-        } catch let appError as AppError {
-            throw appError
+            
+            return try response.decoded(LoginResponseDTO.self).toDomain()
+        } catch let apiError as APIError {
+            throw apiError.toDomain()
+        } catch {
+            throw AppError.internalError(error)
         }
     }
 }

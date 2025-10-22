@@ -1,8 +1,8 @@
 // DOCS: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/errorhandling/
 
-public enum AppError: Error, Sendable {
-    case offline, timeout
-    case server(status: Int, message: String?)
-    case decoding
-    case unknown(message: String?)
+public enum AppError: Error {
+    case networkError
+    case unauthorized
+    case serverError(ServerError?)
+    case internalError(Error?)
 }
