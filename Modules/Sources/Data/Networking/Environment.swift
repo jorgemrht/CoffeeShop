@@ -1,4 +1,5 @@
 import Foundation
+import Macros
 
 public enum Environment {
     case staging, production
@@ -14,15 +15,18 @@ public enum Environment {
     public var baseURL: URL {
         switch self {
         case .staging:
-            guard let url = URL(string: "https://staging.api.myapp.com") else {
-                fatalError("Invalid staging URL")
-            }
-            return url
+            #URL("https://staging.api.myapp.com")
         case .production:
-            guard let url = URL(string: "https://api.myapp.com") else {
-                fatalError("Invalid production URL")
-            }
-            return url
+            #URL("https://api.myapp.com")
+        }
+    }
+
+    public var supportLogsURL: URL {
+        switch self {
+        case .staging:
+            #URL("https://staging.api.myapp.com/support/logs")
+        case .production:
+            #URL("https://api.myapp.com/support/logs")
         }
     }
 }
