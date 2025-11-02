@@ -39,8 +39,7 @@ let package = Package(
             name: "Data",
             dependencies: [
                 "Domain",
-                "Macros",
-                "Tracking"
+                "Macros"
             ]
         ),
         .target(
@@ -59,6 +58,7 @@ let package = Package(
         .target(
             name: "Tracking",
             dependencies: [
+                "Domain",
                 "Macros"
             ]
         ),
@@ -77,7 +77,7 @@ let package = Package(
         ),
         .testTarget(
             name: "ModulesTests",
-            dependencies: ["SharedCore"]
+            dependencies: ["SharedCore", "Tracking"]
         )
     ]
 )

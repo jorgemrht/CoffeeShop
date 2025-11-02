@@ -1,5 +1,5 @@
 import Foundation
-import Tracking
+import Domain
 
 public enum DiagnosticsEndpoints {
 
