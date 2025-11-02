@@ -2,11 +2,12 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+import CompilerPluginSupport
 
 let package = Package(
     name: "CoffeShopModules",
     defaultLocalization: "en",
-    platforms: [.iOS(.v26)],
+    platforms: [.iOS(.v18)],
     products: [
         .library(
             name: "CoffeShopModules",
@@ -16,6 +17,9 @@ let package = Package(
                 "SharedCore"
             ]
         ),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", exact: "602.0.0")
     ],
     targets: [
         .target(
@@ -34,12 +38,12 @@ let package = Package(
         .target(
             name: "Data",
             dependencies: [
-                "Domain"
+                "Domain",
+                "Macros"
             ]
         ),
         .target(
-            name: "DesignSystem",
-            // dependencies: [ ]
+            name: "DesignSystem"
         ),
         .target(
             name: "Domain",
@@ -50,6 +54,19 @@ let package = Package(
             dependencies: [
                 "DesignSystem"
             ]
+        ),
+        .macro(
+            name: "MacrosPlugin",
+            dependencies: [
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftDiagnostics", package: "swift-syntax"), // Optional but recommended
+                .product(name: "SwiftSyntax", package: "swift-syntax"), // Optional but recommended
+            ]
+        ),
+        .target(
+            name: "Macros",
+            dependencies: ["MacrosPlugin"]
         ),
         .testTarget(
             name: "ModulesTests",
