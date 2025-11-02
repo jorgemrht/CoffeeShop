@@ -1,5 +1,5 @@
 import Foundation
-import Tracking
+import Domain
 
 public struct LogsRequestDTO: Sendable, Codable {
     public let deviceInfo: DeviceInfo
