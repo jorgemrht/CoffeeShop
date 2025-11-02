@@ -12,7 +12,7 @@ public enum LoginEndpoints {
                 path: "/auth/login",
                 method: .POST,
                 queryItems: nil,
-                body: AnyEncodable(LoginRequestDTO(email: email, password: password))
+                body: LoginRequestDTO(email: email, password: password)
             )
 
         case let .register(email, password):
@@ -20,7 +20,7 @@ public enum LoginEndpoints {
                 path: "/auth/register",
                 method: .POST,
                 queryItems: nil,
-                body: AnyEncodable(RegisterRequestDTO(email: email, password: password))
+                body: RegisterRequestDTO(email: email, password: password)
             )
         }
     }

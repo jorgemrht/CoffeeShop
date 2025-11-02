@@ -18,7 +18,7 @@ public enum ShopEndpoints {
         case .detail(let id):
             APIEndpoint(
                 path: "/shops/\(id)",
-                method: .POST,
+                method: .GET,
                 queryItems: nil,
                 body: nil
             )

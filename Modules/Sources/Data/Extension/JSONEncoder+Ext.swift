@@ -1,7 +1,7 @@
 import Foundation
 
 public extension JSONEncoder {
-    static func apiDefault() -> JSONEncoder {
+    static func encoderDefault() -> JSONEncoder {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder

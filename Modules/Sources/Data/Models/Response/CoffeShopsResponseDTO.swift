@@ -1,6 +1,6 @@
 import Domain
 
-struct CoffeShopsResponseDTO: Decodable {
+public struct CoffeeShopsResponseDTO: Decodable {
     let id: String
     let title: String
     let description: String
@@ -8,14 +8,14 @@ struct CoffeShopsResponseDTO: Decodable {
     let url: String?
 }
 
-extension CoffeShopsResponseDTO {
-    var toDomain: CoffeShops {
+extension CoffeeShopsResponseDTO {
+    var toDomain: CoffeeShops {
         .init(id: id, title: title, description: description, image: image, url: url)
     }
 }
 
-extension [CoffeShopsResponseDTO] {
-    func toDomain() -> [CoffeShops] {
+extension [CoffeeShopsResponseDTO] {
+    func toDomain() -> [CoffeeShops] {
         map(\.toDomain)
     }
 }
