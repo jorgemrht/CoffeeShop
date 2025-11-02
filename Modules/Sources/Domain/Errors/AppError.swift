@@ -2,6 +2,7 @@
 
 public enum AppError: Error {
     case networkError
+    case timeout
     case unauthorized
     case serverError(ServerError?)
     case internalError(Error?)

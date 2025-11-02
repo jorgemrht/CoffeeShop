@@ -1,11 +1,12 @@
 import Domain
 import Foundation
+import OSLog
 
 public struct AuthRepositoryImpl: AuthRepository, Sendable {
 
     private let networkClient: NetworkClient
-    
-    init(networkClient: NetworkClient) {
+
+    public init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
 
@@ -14,7 +15,7 @@ public struct AuthRepositoryImpl: AuthRepository, Sendable {
             let response = try await networkClient.request(
                 LoginEndpoints.login(email: email, password: password).endpoint
             )
-            
+
             return try response.decoded(LoginResponseDTO.self).toDomain()
         } catch let apiError as APIError {
             throw apiError.toDomain()
