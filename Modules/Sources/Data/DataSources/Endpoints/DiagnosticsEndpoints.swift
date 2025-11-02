@@ -1,4 +1,5 @@
 import Foundation
+import Tracking
 
 public enum DiagnosticsEndpoints {
 
