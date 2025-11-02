@@ -7,7 +7,7 @@ import CompilerPluginSupport
 let package = Package(
     name: "CoffeShopModules",
     defaultLocalization: "en",
-    platforms: [.iOS(.v18)],
+    platforms: [.iOS(.v18), .macOS(.v14)],
     products: [
         .library(
             name: "CoffeShopModules",
@@ -39,7 +39,8 @@ let package = Package(
             name: "Data",
             dependencies: [
                 "Domain",
-                "Macros"
+                "Macros",
+                "Tracking"
             ]
         ),
         .target(
@@ -53,6 +54,12 @@ let package = Package(
             name: "FeatureShops",
             dependencies: [
                 "DesignSystem"
+            ]
+        ),
+        .target(
+            name: "Tracking",
+            dependencies: [
+                "Macros"
             ]
         ),
         .macro(

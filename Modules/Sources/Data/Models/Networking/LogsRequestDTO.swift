@@ -1,4 +1,5 @@
 import Foundation
+import Tracking
 
 public struct LogsRequestDTO: Sendable, Codable {
     public let deviceInfo: DeviceInfo
