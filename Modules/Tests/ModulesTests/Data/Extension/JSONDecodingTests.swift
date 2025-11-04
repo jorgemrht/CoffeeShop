@@ -8,7 +8,7 @@ import Foundation
 struct JSONDecodingTests {
 
     @Test func decoderDefaultConvertsFromSnakeCase() throws {
-        // Given: JSON with snake_case keys
+        // Given
         let json = """
         {
             "token": "abc123xyz"
@@ -16,16 +16,16 @@ struct JSONDecodingTests {
         """
         let data = Data(json.utf8)
 
-        // When: Decoding with decoderDefault
+        // When
         let decoder = JSONDecoder.decoderDefault()
         let dto = try decoder.decode(LoginResponseDTO.self, from: data)
 
-        // Then: Should decode to camelCase properties
+        // Then
         #expect(dto.token == "abc123xyz")
     }
 
     @Test func decoderDefaultHandlesComplexSnakeCase() throws {
-        // Given: JSON with complex snake_case keys
+        // Given
         struct ComplexDTO: Codable {
             let userId: String
             let accessToken: String
@@ -41,11 +41,11 @@ struct JSONDecodingTests {
         """
         let data = Data(json.utf8)
 
-        // When: Decoding with decoderDefault
+        // When
         let decoder = JSONDecoder.decoderDefault()
         let dto = try decoder.decode(ComplexDTO.self, from: data)
 
-        // Then: Should decode all properties correctly
+        // Then
         #expect(dto.userId == "user123")
         #expect(dto.accessToken == "access_abc")
         #expect(dto.refreshToken == "refresh_xyz")

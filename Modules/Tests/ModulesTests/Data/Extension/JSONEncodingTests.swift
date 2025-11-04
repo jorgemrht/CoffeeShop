@@ -8,22 +8,22 @@ import Foundation
 struct JSONEncodingTests {
 
     @Test func encoderDefaultConvertsToSnakeCase() throws {
-        // Given: A DTO with camelCase properties
+        // Given
         let dto = LoginRequestDTO(email: "test@example.com", password: "secret123")
 
-        // When: Encoding with encoderDefault
+        // When
         let encoder = JSONEncoder.encoderDefault()
         let data = try encoder.encode(dto)
         let json = String(data: data, encoding: .utf8)
 
-        // Then: JSON should contain snake_case keys
+        // Then
         #expect(json != nil)
         #expect(json!.contains("\"email\""))
         #expect(json!.contains("\"password\""))
     }
 
     @Test func encoderDefaultHandlesMultipleProperties() throws {
-        // Given: A struct with multiple camelCase properties
+        // Given
         struct TestDTO: Codable {
             let firstName: String
             let lastName: String
@@ -31,12 +31,12 @@ struct JSONEncodingTests {
         }
         let dto = TestDTO(firstName: "John", lastName: "Doe", emailAddress: "john@example.com")
 
-        // When: Encoding with encoderDefault
+        // When
         let encoder = JSONEncoder.encoderDefault()
         let data = try encoder.encode(dto)
         let json = String(data: data, encoding: .utf8)
 
-        // Then: All keys should be in snake_case
+        // Then
         #expect(json != nil)
         #expect(json!.contains("first_name"))
         #expect(json!.contains("last_name"))
