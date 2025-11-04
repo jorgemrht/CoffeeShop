@@ -23,4 +23,18 @@ public struct AuthRepositoryImpl: AuthRepository, Sendable {
             throw AppError.internalError(error)
         }
     }
+
+    public func register(email: String, password: String) async throws -> UserSession {
+        do {
+            let response = try await networkClient.request(
+                LoginEndpoints.register(email: email, password: password).endpoint
+            )
+
+            return try response.decoded(LoginResponseDTO.self).toDomain()
+        } catch let apiError as APIError {
+            throw apiError.toDomain()
+        } catch {
+            throw AppError.internalError(error)
+        }
+    }
 }
