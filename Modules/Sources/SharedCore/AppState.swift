@@ -1,5 +1,7 @@
 import Foundation
+import SwiftUI
 import Observation
+import Domain
 
 // DOC: https://developer.apple.com/documentation/SwiftUI/NavigationStack
 // DOC: https://developer.apple.com/documentation/swiftui/navigationpath
@@ -7,49 +9,73 @@ import Observation
 // DOC: https://developer.apple.com/documentation/Swift/MainActor
 // DOC: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency
 
-public enum TabID: Hashable { case shops, settings }
+public enum RootView: Sendable {
+    case splash
+    case auth
+    case home
+}
 
 // Auth
-public enum AuthRoute: Hashable { case login, register }
+public enum AuthRoute: Sendable {
+    case register
+}
+
+// Tabbar tab
+public enum TabRoute: Sendable {
+    case shops
+    case settings
+}
 
 // Shops tab
-public enum ShopsRoute: Hashable {
+public enum ShopsRoute: Sendable {
     case main
     case detail(id: Int)
 }
 
 // Settings tab
-public enum SettingsRoute: Hashable { case main }
+public enum SettingsRoute: Sendable {
+    case main
+}
 
 @Observable
 public final class AppState {
-    // Sesión
-    public var isLoggedIn: Bool = false
-
+    
     // Tab bar
-    public var selectedTab: TabID = .shops
+    public var selectedTab: TabRoute = .shops
 
     // Paths
-    public var authPath: [AuthRoute] = [.login]
+    public var authPath: [AuthRoute] = []
     public var shopsPath: [ShopsRoute] = [.main]
     public var settingsPath: [SettingsRoute] = [.main]
+    
+    public private(set) var root: RootView
 
-    public init() {}
+    public init(root: RootView) {
+        self.root = root
+    }
+    
+    public func transition(to root: RootView) {
+        self.root = root
+    }
 
     // Helpers
     @MainActor public func openShopDetail(id: Int) {
         selectedTab = .shops
         shopsPath = [.main, .detail(id: id)]
     }
+
     @MainActor public func goHome() {
         selectedTab = .shops
         shopsPath = [.main]
     }
+
     @MainActor public func resetForLogout() {
         selectedTab = .shops
-        authPath = [.login]
         shopsPath = [.main]
         settingsPath = [.main]
-        isLoggedIn = false
     }
+}
+
+public extension EnvironmentValues {
+    @Entry var appState: AppState?
 }
