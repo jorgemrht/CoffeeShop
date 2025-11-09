@@ -3,6 +3,7 @@ import SharedCore
 import FeatureSplash
 import FeatureLogin
 import FeatureRegister
+import FeatureMain
 import Data
 import Tracking
 import Domain
@@ -32,10 +33,12 @@ public struct RootView: View {
                 LoginViewScreen()
                     .withStore(LoginStore.self)
 
-            case .home:
-                Text("Home")
+            case .main:
+                MainViewScreen()
+                    .withStore(MainStore.self)
             }
         }
+        .id(appState.root)
         .environment(appState)
         .environment(\.networkClient, networkClient)
         .environment(\.logRepository, logRepository)

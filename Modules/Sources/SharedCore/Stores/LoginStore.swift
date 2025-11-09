@@ -34,20 +34,24 @@ public final class LoginStore: Injectable {
     }
 
     public func login() async {
-        guard !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-              !password.isEmpty else {
-            return
-        }
-
-        isLoading = true
-        defer { isLoading = false }
-
-        do {
-            let userSession = try await authRepository.login(email: email, password: password)
-            session = userSession
-        } catch {
-            await logRepository.log(.error, .authentication, error: error)
-        }
+        
+        navigation = .main
+//        
+//        guard !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+//              !password.isEmpty else {
+//            return
+//        }
+//
+//        isLoading = true
+//        defer { isLoading = false }
+//
+//        do {
+//            let userSession = try await authRepository.login(email: email, password: password)
+//            session = userSession
+//            navigation = .main
+//        } catch {
+//            await logRepository.log(.error, .authentication, error: error)
+//        }
     }
 }
 

@@ -13,11 +13,11 @@ public struct RegisterViewScreen: View {
 
         VStack(spacing: 24) {
             VStack(spacing: 8) {
-                Text("Crear Cuenta")
+                Text("Create Account")
                     .font(.largeTitle)
                     .fontWeight(.bold)
 
-                Text("Regístrate para comenzar")
+                Text("Sign up to get started")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -31,11 +31,11 @@ public struct RegisterViewScreen: View {
                     .textContentType(.emailAddress)
                     .autocorrectionDisabled()
 
-                SecureField("Contraseña", text: $registerStore.password)
+                SecureField("Password", text: $registerStore.password)
                     .textFieldStyle(.roundedBorder)
                     .textContentType(.newPassword)
 
-                SecureField("Confirmar Contraseña", text: $registerStore.confirmPassword)
+                SecureField("Confirm Password", text: $registerStore.confirmPassword)
                     .textFieldStyle(.roundedBorder)
                     .textContentType(.newPassword)
             }
@@ -51,7 +51,7 @@ public struct RegisterViewScreen: View {
                         .progressViewStyle(.circular)
                         .tint(.white)
                 } else {
-                    Text("Registrarse")
+                    Text("Sign Up")
                         .fontWeight(.semibold)
                 }
             }
