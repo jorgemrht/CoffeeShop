@@ -29,7 +29,8 @@ let package = Package(
                 "FeatureSplash",
                 "FeatureLogin",
                 "FeatureRegister",
-                "FeatureShops"
+                "FeatureShops",
+                "FeatureMain"
             ]
         ),
         .target(
@@ -78,6 +79,13 @@ let package = Package(
         .target(
             name: "FeatureShops",
             dependencies: [
+                "DesignSystem"
+            ]
+        ),
+        .target(
+            name: "FeatureMain",
+            dependencies: [
+                "SharedCore",
                 "DesignSystem"
             ]
         ),

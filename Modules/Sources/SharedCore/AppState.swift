@@ -12,7 +12,7 @@ import Domain
 public enum RootView: Sendable {
     case splash
     case auth
-    case home
+    case main
 }
 
 // Auth
@@ -20,33 +20,39 @@ public enum AuthRoute: Sendable {
     case register
 }
 
-// Tabbar tab
+// TabBar tabs
 public enum TabRoute: Sendable {
+    case coffee
     case shops
-    case settings
 }
 
-// Shops tab
-public enum ShopsRoute: Sendable {
+// Coffee tab routes
+public enum CoffeeRoute: Sendable, Hashable {
     case main
     case detail(id: Int)
 }
 
-// Settings tab
-public enum SettingsRoute: Sendable {
+// Shops tab routes
+public enum ShopsRoute: Sendable, Hashable {
     case main
+}
+
+// Settings
+public enum SettingsRoute: Sendable, Hashable {
+    case settings
 }
 
 @Observable
 public final class AppState {
-    
+
     // Tab bar
-    public var selectedTab: TabRoute = .shops
+    public var selectedTab: TabRoute = .coffee
 
     // Paths
     public var authPath: [AuthRoute] = []
-    public var shopsPath: [ShopsRoute] = [.main]
-    public var settingsPath: [SettingsRoute] = [.main]
+    public var coffeePath: [CoffeeRoute] = []
+    public var shopsPath: [ShopsRoute] = []
+    public var settingsPath: [SettingsRoute] = []
     
     public private(set) var root: RootView
 
@@ -58,21 +64,16 @@ public final class AppState {
         self.root = root
     }
 
-    // Helpers
-    @MainActor public func openShopDetail(id: Int) {
-        selectedTab = .shops
-        shopsPath = [.main, .detail(id: id)]
-    }
-
-    @MainActor public func goHome() {
-        selectedTab = .shops
-        shopsPath = [.main]
+    @MainActor public func openCoffeeDetail(id: Int) {
+        selectedTab = .coffee
+        coffeePath = [.detail(id: id)]
     }
 
     @MainActor public func resetForLogout() {
-        selectedTab = .shops
-        shopsPath = [.main]
-        settingsPath = [.main]
+        selectedTab = .coffee
+        coffeePath = []
+        shopsPath = []
+        settingsPath = []
     }
 }
 
