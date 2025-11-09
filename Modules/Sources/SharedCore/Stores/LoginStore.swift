@@ -4,20 +4,22 @@ import Domain
 
 @MainActor
 @Observable
-public final class LoginStore {
+public final class LoginStore: Injectable {
 
     public enum Navigation {
         case main
     }
-    
-    public let authRepository: AuthRepository
+
+    private let authRepository: AuthRepository
 
     public var email: String = ""
     public var password: String = ""
     public var isLoading: Bool = false
     public private(set) var session: UserSession?
     public var navigation: Navigation?
-    
+
+    // MARK: - Initialization
+
     public init(authRepository: AuthRepository) {
         self.authRepository = authRepository
     }
@@ -41,5 +43,11 @@ public final class LoginStore {
             let userSession = try await authRepository.login(email: email, password: password)
             session = userSession
         } catch {  }
+    }
+}
+
+extension LoginStore {
+    public static func resolve(from container: DependencyContainer) -> LoginStore {
+        LoginStore(authRepository: container.authRepository())
     }
 }

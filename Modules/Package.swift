@@ -25,6 +25,10 @@ let package = Package(
         .target(
             name: "AppNavigation",
             dependencies: [
+                "SharedCore",
+                "FeatureSplash",
+                "FeatureLogin",
+                "FeatureRegister",
                 "FeatureShops"
             ]
         ),
@@ -32,7 +36,9 @@ let package = Package(
             name: "SharedCore",
             dependencies: [
                 "Data",
-                "Domain"
+                "Domain",
+                "DesignSystem",
+                "TestHelpers"
             ]
         ),
         .target(
@@ -48,6 +54,25 @@ let package = Package(
         .target(
             name: "Domain",
             dependencies: [ ]
+        ),
+        .target(
+            name: "FeatureLogin",
+            dependencies: [
+                "SharedCore",
+                "FeatureRegister"
+            ]
+        ),
+        .target(
+            name: "FeatureRegister",
+            dependencies: [
+                "SharedCore"
+            ]
+        ),
+        .target(
+            name: "FeatureSplash",
+            dependencies: [
+                "SharedCore"
+            ]
         ),
         .target(
             name: "FeatureShops",
@@ -75,9 +100,17 @@ let package = Package(
             name: "Macros",
             dependencies: ["MacrosPlugin"]
         ),
+        .target(
+            name: "TestHelpers",
+            dependencies: ["Domain"]
+        ),
         .testTarget(
             name: "ModulesTests",
-            dependencies: ["SharedCore", "Tracking"]
+            dependencies: [
+                "SharedCore",
+                "Tracking",
+                "TestHelpers"
+            ]
         )
     ]
 )

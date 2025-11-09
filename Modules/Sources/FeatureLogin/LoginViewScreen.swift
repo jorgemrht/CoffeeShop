@@ -6,7 +6,7 @@ import TestHelpers
 public struct LoginViewScreen: View {
     
     @Environment(LoginStore.self) private var loginStore
-    @Environment(\.appState) private var appState: AppState?
+    @Environment(AppState.self) private var appState
     
     public init() { }
 
@@ -45,19 +45,17 @@ public struct LoginViewScreen: View {
             }
             .onChange(of: loginStore.navigation) { _, newValue in
                 guard let newValue else { return }
-                
+
                 switch newValue {
                 case .main:
-                    appState?.transition(to: .home)
+                    appState.transition(to: .home)
                 }
             }
             .navigationDestination(for: AuthRoute.self) { route in
                 switch route {
                 case .register:
                     RegisterViewScreen()
-                        .environment(
-                            RegisterStore(authRepository: loginStore.authRepository)
-                        )
+                        .withStore(RegisterStore.self)
                 }
             }
         }

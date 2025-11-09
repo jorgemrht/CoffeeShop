@@ -1,11 +1,18 @@
 import SwiftUI
 import SharedCore
+import FeatureSplash
 import FeatureLogin
 import FeatureRegister
+import Data
 
 public struct RootView: View {
 
-    @Environment(AppState.self) private var appState
+    @State private var appState = AppState(root: .splash)
+    
+    @State private var networkClient = NetworkClient(
+        baseURL: Environment.current.baseURL.absoluteString,
+        interceptors: []
+    )
 
     public init() {}
 
@@ -13,13 +20,18 @@ public struct RootView: View {
         Group {
             switch appState.root {
             case .splash:
-                Text("Splash")
+                SplashViewScreen()
+
             case .auth:
                 LoginViewScreen()
+                    .withStore(LoginStore.self)
+
             case .home:
-                Text("Login")
+                Text("Home")
             }
         }
+        .environment(appState)
+        .environment(\.networkClient, networkClient)
+        .animation(.easeInOut, value: appState.root)
     }
-
 }

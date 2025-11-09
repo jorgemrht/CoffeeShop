@@ -4,7 +4,7 @@ import Domain
 
 @MainActor
 @Observable
-public final class RegisterStore {
+public final class RegisterStore: Injectable {
 
     private let authRepository: AuthRepository
 
@@ -22,7 +22,7 @@ public final class RegisterStore {
     public init(authRepository: AuthRepository) {
         self.authRepository = authRepository
     }
-
+    
     public var isRegisterEnabled: Bool {
         !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !password.isEmpty &&
@@ -33,19 +33,16 @@ public final class RegisterStore {
     }
 
     public func register() async {
-        // Validate passwords match
         guard password == confirmPassword else {
             errorMessage = "Las contraseñas no coinciden"
             return
         }
 
-        // Validate password strength
         guard password.count >= 6 else {
             errorMessage = "La contraseña debe tener al menos 6 caracteres"
             return
         }
 
-        // Validate email
         guard !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             errorMessage = "El email es requerido"
             return
@@ -63,3 +60,11 @@ public final class RegisterStore {
         }
     }
 }
+
+extension RegisterStore {
+    public static func resolve(from container: DependencyContainer) -> RegisterStore {
+        RegisterStore(authRepository: container.authRepository())
+    }
+}
+
+
