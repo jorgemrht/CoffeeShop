@@ -11,7 +11,7 @@ import os.signpost
 // Signposts also work in Release but are only activated when: The device is connected to Instruments or uses MetricKit to collect aggregate metrics
 // Guidelines/#data-collection-and-storage: https://developer.apple.com/app-store/review/guidelines/#data-collection-and-storage
 
-public struct LoggingInterceptor: RequestInterceptor {
+public struct LoggerInterceptor: RequestInterceptor {
     
     private let logger: Logger
     private let signposter: OSSignposter
@@ -32,7 +32,7 @@ public struct LoggingInterceptor: RequestInterceptor {
     }
 
     public init(
-        subsystem: String,
+        subsystem: String?,
         category: String,
         logLevel: LogLevel = .info,
         includeHeaders: Bool = false,
@@ -40,8 +40,8 @@ public struct LoggingInterceptor: RequestInterceptor {
         sensitiveHeaders: Set<String> = ["authorization", "token", "api-key", "x-api-key", "cookie", "set-cookie"],
         maxBodySizeKB: Int = 64
     ) {
-        self.logger = Logger(subsystem: subsystem, category: category)
-        self.signposter = OSSignposter(subsystem: subsystem, category: category)
+        self.logger = Logger(subsystem: subsystem ?? "none", category: category)
+        self.signposter = OSSignposter(subsystem: subsystem ?? "none", category: category)
         self.logLevel = logLevel
         self.includeHeaders = includeHeaders
         self.includeBody = includeBody
@@ -251,7 +251,7 @@ private extension Duration {
     }
 }
 
-extension LoggingInterceptor {
+extension LoggerInterceptor {
     private enum SignpostName {
         static let httpRequest: StaticString = "HTTP Request"
         static let response: StaticString = "Response"

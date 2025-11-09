@@ -2,7 +2,7 @@ import Foundation
 
 public struct LoggingConfiguration: Sendable {
 
-    public let logLevel: LoggingInterceptor.LogLevel
+    public let logLevel: LoggerInterceptor.LogLevel
     public let includeHeaders: Bool
     public let includeBody: Bool
     public let maxBodySizeKB: Int
@@ -23,17 +23,17 @@ public struct LoggingConfiguration: Sendable {
         maxBodySizeKB: 64,
         sensitiveHeaders: ["authorization", "token", "api-key", "x-api-key", "cookie", "set-cookie"]
     )
-    
+
     public static var current: LoggingConfiguration {
         #if DEBUG
-        return .development
+        .development
         #else
-        return .production
+        .production
         #endif
     }
 
     public init(
-        logLevel: LoggingInterceptor.LogLevel,
+        logLevel: LoggerInterceptor.LogLevel,
         includeHeaders: Bool,
         includeBody: Bool,
         maxBodySizeKB: Int,
@@ -47,10 +47,10 @@ public struct LoggingConfiguration: Sendable {
     }
 
     public func createInterceptor(
-        subsystem: String,
+        subsystem: String?,
         category: String
-    ) -> LoggingInterceptor {
-        LoggingInterceptor(
+    ) -> LoggerInterceptor {
+        LoggerInterceptor(
             subsystem: subsystem,
             category: category,
             logLevel: logLevel,

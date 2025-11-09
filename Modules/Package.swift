@@ -38,7 +38,8 @@ let package = Package(
                 "Data",
                 "Domain",
                 "DesignSystem",
-                "TestHelpers"
+                "TestHelpers",
+                "Tracking"
             ]
         ),
         .target(
@@ -83,8 +84,7 @@ let package = Package(
         .target(
             name: "Tracking",
             dependencies: [
-                "Domain",
-                "Macros"
+                "Macros",
             ]
         ),
         .macro(
@@ -102,7 +102,11 @@ let package = Package(
         ),
         .target(
             name: "TestHelpers",
-            dependencies: ["Domain"]
+            dependencies: [
+                "Domain",
+                "Tracking",
+                "Data"
+            ]
         ),
         .testTarget(
             name: "ModulesTests",

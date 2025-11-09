@@ -75,7 +75,8 @@ public struct RegisterViewScreen: View {
         RegisterViewScreen()
             .environment(
                 RegisterStore(
-                    authRepository: MockAuthRepository()
+                    authRepository: MockAuthRepository(),
+                    logRepository: MockLogRepository.mock
                 )
             )
     }
