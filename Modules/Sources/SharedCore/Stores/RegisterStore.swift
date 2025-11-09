@@ -1,4 +1,5 @@
 import SwiftUI
+import Tracking
 import Observation
 import Domain
 
@@ -7,6 +8,7 @@ import Domain
 public final class RegisterStore: Injectable {
 
     private let authRepository: AuthRepository
+    private let logRepository: LogRepositoryImpl
 
     public enum NavigationEvent {
         case home
@@ -19,8 +21,9 @@ public final class RegisterStore: Injectable {
     public var errorMessage: String?
     public private(set) var session: UserSession?
 
-    public init(authRepository: AuthRepository) {
+    public init(authRepository: AuthRepository, logRepository: LogRepositoryImpl) {
         self.authRepository = authRepository
+        self.logRepository = logRepository
     }
     
     public var isRegisterEnabled: Bool {
@@ -63,7 +66,7 @@ public final class RegisterStore: Injectable {
 
 extension RegisterStore {
     public static func resolve(from container: DependencyContainer) -> RegisterStore {
-        RegisterStore(authRepository: container.authRepository())
+        RegisterStore(authRepository: container.authRepository(), logRepository: container.logRepository())
     }
 }
 

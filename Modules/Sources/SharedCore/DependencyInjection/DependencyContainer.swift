@@ -1,6 +1,7 @@
 import SwiftUI
 import Data
 import Domain
+import Tracking
 
 @MainActor
 public struct DependencyContainer {
@@ -21,17 +22,12 @@ extension DependencyContainer {
         }
         return AuthRepositoryImpl(networkClient: networkClient)
     }
-}
 
-// MARK: - Store Factories
-
-extension DependencyContainer {
-    public func loginStore() -> LoginStore {
-        LoginStore(authRepository: authRepository())
-    }
-
-    public func registerStore() -> RegisterStore {
-        RegisterStore(authRepository: authRepository())
+    public func logRepository() -> LogRepositoryImpl {
+        guard let logRepository = environment.logRepository else {
+            fatalError("LogRepository not found in Environment")
+        }
+        return logRepository
     }
 }
 

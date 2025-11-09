@@ -67,7 +67,8 @@ public struct LoginViewScreen: View {
         LoginViewScreen()
             .environment(
                 LoginStore(
-                    authRepository: MockAuthRepository()
+                    authRepository: MockAuthRepository(),
+                    logRepository: MockLogRepository.mock
                 )
             )
     }

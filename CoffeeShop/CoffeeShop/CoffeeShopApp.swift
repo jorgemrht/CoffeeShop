@@ -5,7 +5,7 @@ import AppNavigation
 struct CoffeeShopApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(bundle: .main)
         }
     }
 }

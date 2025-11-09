@@ -4,17 +4,23 @@ import FeatureSplash
 import FeatureLogin
 import FeatureRegister
 import Data
+import Tracking
+import Domain
 
 public struct RootView: View {
 
     @State private var appState = AppState(root: .splash)
-    
-    @State private var networkClient = NetworkClient(
-        baseURL: Environment.current.baseURL.absoluteString,
-        interceptors: []
-    )
+    @State private var networkClient: NetworkClient
+    @State private var logRepository: LogRepositoryImpl
 
-    public init() {}
+    public init(bundle: Bundle) {
+        self.networkClient = NetworkClient.default(bundleIdentifier: bundle.bundleIdentifier)
+        let appInfo = AppInfo(bundle: bundle)
+        self.logRepository = LogRepositoryImpl.default(
+            deviceInfo: .init(appVersion: appInfo.appVersion, buildNumber: appInfo.buildNumber, deviceModel: appInfo.deviceModel),
+            bundleIdentifier: bundle.bundleIdentifier
+        )
+    }
 
     public var body: some View {
         Group {
@@ -32,6 +38,7 @@ public struct RootView: View {
         }
         .environment(appState)
         .environment(\.networkClient, networkClient)
+        .environment(\.logRepository, logRepository)
         .animation(.easeInOut, value: appState.root)
     }
 }

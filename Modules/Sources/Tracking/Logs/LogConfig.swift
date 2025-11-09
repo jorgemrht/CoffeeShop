@@ -1,25 +1,33 @@
 import Foundation
 import Macros
 
-/// Configuration for logging backend
 public struct LogConfig: Sendable {
-    public let endpoint: URL
+    public let baseURL: URL
+    public let pathLogs: String
+    public let pathDiagnostics: String
 
-    public init(endpoint: URL) {
-        self.endpoint = endpoint
+    public init(baseURL: URL, pathLogs: String, pathDiagnostics: String) {
+        self.baseURL = baseURL
+        self.pathLogs = pathLogs
+        self.pathDiagnostics = pathDiagnostics
     }
 
-    /// Staging environment
     public static var staging: LogConfig {
-        LogConfig(endpoint: #URL("https://staging.api.myapp.com/logs"))
+        LogConfig(
+            baseURL: #URL("https://staging.api.myapp.com"),
+            pathLogs: "/logs",
+            pathDiagnostics: "/logs/reportsFromUser"
+        )
     }
 
-    /// Production environment
     public static var production: LogConfig {
-        LogConfig(endpoint: #URL("https://api.myapp.com/logs"))
+        LogConfig(
+            baseURL: #URL("https://api.myapp.com"),
+            pathLogs: "/logs",
+            pathDiagnostics: "/logs/reportsFromUser"
+        )
     }
 
-    /// Current environment based on build configuration
     public static var current: LogConfig {
         #if DEBUG
         return .staging

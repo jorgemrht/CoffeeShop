@@ -1,6 +1,7 @@
 import SwiftUI
 import Observation
 import Domain
+import Tracking
 
 @MainActor
 @Observable
@@ -11,6 +12,7 @@ public final class LoginStore: Injectable {
     }
 
     private let authRepository: AuthRepository
+    private let logRepository: LogRepositoryImpl
 
     public var email: String = ""
     public var password: String = ""
@@ -20,8 +22,9 @@ public final class LoginStore: Injectable {
 
     // MARK: - Initialization
 
-    public init(authRepository: AuthRepository) {
+    public init(authRepository: AuthRepository, logRepository: LogRepositoryImpl) {
         self.authRepository = authRepository
+        self.logRepository = logRepository
     }
 
     public var isLoginEnabled: Bool {
@@ -42,12 +45,17 @@ public final class LoginStore: Injectable {
         do {
             let userSession = try await authRepository.login(email: email, password: password)
             session = userSession
-        } catch {  }
+        } catch {
+            await logRepository.log(.error, .authentication, error: error)
+        }
     }
 }
 
 extension LoginStore {
     public static func resolve(from container: DependencyContainer) -> LoginStore {
-        LoginStore(authRepository: container.authRepository())
+        LoginStore(
+            authRepository: container.authRepository(),
+            logRepository: container.logRepository()
+        )
     }
 }

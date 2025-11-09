@@ -46,11 +46,11 @@ public enum MockAuthError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .invalidCredentials:
-            return "Email o contraseña incorrectos"
+            "Email o contraseña incorrectos"
         case .userAlreadyExists:
-            return "El usuario ya existe"
+            "El usuario ya existe"
         case .networkError:
-            return "Error de red"
+            "Error de red"
         }
     }
 }
