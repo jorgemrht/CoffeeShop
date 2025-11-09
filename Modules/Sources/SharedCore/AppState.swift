@@ -76,6 +76,3 @@ public final class AppState {
     }
 }
 
-public extension EnvironmentValues {
-    @Entry var appState: AppState?
-}
