@@ -79,11 +79,50 @@ let package = Package(
         .target(
             name: "FeatureShops",
             dependencies: [
+                "SharedCore",
+                "DesignSystem",
+                "Tracking",
+                "TestHelpers"
+            ]
+        ),
+        .target(
+            name: "FeatureShopDetail",
+            dependencies: [
+                "SharedCore",
                 "DesignSystem"
             ]
         ),
         .target(
             name: "FeatureMain",
+            dependencies: [
+                "SharedCore",
+                "DesignSystem",
+                "FeatureCoffee",
+                "FeatureCoffeeDetail",
+                "FeatureShops",
+                "FeatureShopDetail",
+                "FeatureSettings",
+                "TestHelpers"
+            ]
+        ),
+        .target(
+            name: "FeatureCoffee",
+            dependencies: [
+                "SharedCore",
+                "DesignSystem",
+                "Tracking",
+                "TestHelpers"
+            ]
+        ),
+        .target(
+            name: "FeatureCoffeeDetail",
+            dependencies: [
+                "SharedCore",
+                "DesignSystem"
+            ]
+        ),
+        .target(
+            name: "FeatureSettings",
             dependencies: [
                 "SharedCore",
                 "DesignSystem"

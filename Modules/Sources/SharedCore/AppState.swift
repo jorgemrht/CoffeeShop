@@ -28,13 +28,12 @@ public enum TabRoute: Sendable {
 
 // Coffee tab routes
 public enum CoffeeRoute: Sendable, Hashable {
-    case main
     case detail(id: Int)
 }
 
 // Shops tab routes
 public enum ShopsRoute: Sendable, Hashable {
-    case main
+    case detail(id: Int)
 }
 
 // Settings

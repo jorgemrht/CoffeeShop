@@ -70,6 +70,7 @@ public struct LoginViewScreen: View {
                     logRepository: MockLogRepository.mock
                 )
             )
+            .environment(AppState(root: .main))
     }
 }
 
