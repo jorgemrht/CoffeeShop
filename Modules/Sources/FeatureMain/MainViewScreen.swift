@@ -1,6 +1,12 @@
 import SwiftUI
 import SharedCore
 import Tracking
+import FeatureCoffee
+import FeatureCoffeeDetail
+import FeatureShops
+import FeatureShopDetail
+import FeatureSettings
+import TestHelpers
 
 public struct MainViewScreen: View {
 
@@ -12,18 +18,21 @@ public struct MainViewScreen: View {
     public var body: some View {
 
         @Bindable var appState = appState
+        @Bindable var mainStore = mainStore
 
         TabView(selection: $appState.selectedTab) {
             NavigationStack(path: $appState.coffeePath) {
-                CoffeeTabView()
+                CoffeeViewScreen()
+                    .navigationTitle("Coffee")
+                    .withStore(CoffeeStore.self)
                     .navigationDestination(for: CoffeeRoute.self) { route in
                         switch route {
                         case .detail(let id):
-                            Text("Coffee Detail \(id)")
-                        case .main:
-                            EmptyView()
+                            CoffeeDetailViewScreen(coffeeId: id)
+                                .withStore(CoffeeDetailStore.self)
                         }
                     }
+                    .modifier(SettingsToolbarModifier())
             }
             .tabItem {
                 Label("Coffee", systemImage: "cup.and.saucer.fill")
@@ -31,83 +40,52 @@ public struct MainViewScreen: View {
             .tag(TabRoute.coffee)
 
             NavigationStack(path: $appState.shopsPath) {
-                ShopsTabView()
+                ShopsViewScreen()
+                    .navigationTitle("Shops")
+                    .withStore(ShopsStore.self)
                     .navigationDestination(for: ShopsRoute.self) { route in
                         switch route {
-                        case .main:
-                            EmptyView()
+                        case .detail(let id):
+                            ShopDetailViewScreen(shopId: id)
+                                .withStore(ShopsStore.self)
                         }
                     }
+                    .modifier(SettingsToolbarModifier())
             }
             .tabItem {
                 Label("Shops", systemImage: "storefront.fill")
             }
             .tag(TabRoute.shops)
         }
-        .onChange(of: mainStore.navigation) { _, newValue in
-            guard let newValue else { return }
-
-            switch newValue {
-            case .settings:
-                appState.settingsPath.append(.settings)
+        .sheet(isPresented: $mainStore.showSettings) {
+            NavigationStack(path: $appState.settingsPath) {
+                SettingsViewScreen()
+                    .withStore(SettingsStore.self)
+                    .navigationDestination(for: SettingsRoute.self) { route in
+                        switch route {
+                        case .settings: EmptyView()
+                        }
+                    }
             }
         }
     }
 }
 
-// MARK: - Coffee Tab View
+private struct SettingsToolbarModifier: ViewModifier {
 
-private struct CoffeeTabView: View {
     @Environment(MainStore.self) private var mainStore
 
-    var body: some View {
-        VStack(spacing: 24) {
-            Text("Coffee")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-
-            Text("Explore our coffee catalog")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-        }
-        .navigationTitle("Coffee")
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    mainStore.navigateToSettings()
-                } label: {
-                    Image(systemName: "gearshape.fill")
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        mainStore.navigateToSettings()
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                    }
                 }
             }
-        }
-    }
-}
-
-// MARK: - Shops Tab View
-
-private struct ShopsTabView: View {
-    @Environment(MainStore.self) private var mainStore
-
-    var body: some View {
-        VStack(spacing: 24) {
-            Text("Shops")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-
-            Text("Find our stores")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-        }
-        .navigationTitle("Shops")
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    mainStore.navigateToSettings()
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                }
-            }
-        }
     }
 }
 
@@ -115,15 +93,11 @@ private struct ShopsTabView: View {
     MainViewScreen()
         .environment(
             MainStore(
-                logRepository: LogRepositoryImpl.default(
-                    deviceInfo: DeviceInfo(
-                        appVersion: "1.0",
-                        buildNumber: "1",
-                        deviceModel: "iPhone"
-                    ),
-                    bundleIdentifier: "com.coffeeshop.preview"
-                )
+                logRepository: MockLogRepository.mock
             )
         )
         .environment(AppState(root: .main))
+        .environment(\.logRepository, MockLogRepository.mock)
+        .environment(\.networkClient, PreviewHelper.mockNetworkClient)
 }
+

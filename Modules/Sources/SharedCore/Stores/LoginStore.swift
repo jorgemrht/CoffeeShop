@@ -17,12 +17,11 @@ public final class LoginStore: Injectable {
     public var email: String = ""
     public var password: String = ""
     public var isLoading: Bool = false
-    public private(set) var session: UserSession?
     public var navigation: Navigation?
 
-    // MARK: - Initialization
-
-    public init(authRepository: AuthRepository, logRepository: LogRepositoryImpl) {
+    public init(authRepository: AuthRepository,
+                logRepository: LogRepositoryImpl
+    ) {
         self.authRepository = authRepository
         self.logRepository = logRepository
     }

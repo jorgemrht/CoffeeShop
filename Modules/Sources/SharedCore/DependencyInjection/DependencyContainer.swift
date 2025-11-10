@@ -23,6 +23,13 @@ extension DependencyContainer {
         return AuthRepositoryImpl(networkClient: networkClient)
     }
 
+    public func coffeeRepository() -> CoffeeRepository {
+        guard let networkClient = environment.networkClient else {
+            fatalError("NetworkClient not found in Environment")
+        }
+        return CoffeeRepositoryImpl(networkClient: networkClient)
+    }
+
     public func logRepository() -> LogRepositoryImpl {
         guard let logRepository = environment.logRepository else {
             fatalError("LogRepository not found in Environment")

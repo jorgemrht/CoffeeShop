@@ -5,6 +5,7 @@ import TestHelpers
 public struct RegisterViewScreen: View {
 
     @Environment(RegisterStore.self) private var registerStore
+    @Environment(AppState.self) private var appState
 
     public init() { }
 
@@ -66,7 +67,13 @@ public struct RegisterViewScreen: View {
 
             Spacer()
         }
-        .navigationTitle("")
+        .onChange(of: registerStore.navigation) { _, newValue in
+            guard let newValue else { return }
+            switch newValue {
+            case .main:
+                appState.transition(to: .main)
+            }
+        }
     }
 }
 
@@ -79,5 +86,6 @@ public struct RegisterViewScreen: View {
                     logRepository: MockLogRepository.mock
                 )
             )
+            .environment(AppState(root: .main))
     }
 }

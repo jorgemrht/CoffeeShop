@@ -10,8 +10,8 @@ public final class RegisterStore: Injectable {
     private let authRepository: AuthRepository
     private let logRepository: LogRepositoryImpl
 
-    public enum NavigationEvent {
-        case home
+    public enum Navigation {
+        case main
     }
 
     public var email: String = ""
@@ -19,6 +19,7 @@ public final class RegisterStore: Injectable {
     public var confirmPassword: String = ""
     public var isLoading: Bool = false
     public var errorMessage: String?
+    public var navigation: Navigation?
     public private(set) var session: UserSession?
 
     public init(authRepository: AuthRepository, logRepository: LogRepositoryImpl) {
@@ -58,6 +59,7 @@ public final class RegisterStore: Injectable {
         do {
             let userSession = try await authRepository.register(email: email, password: password)
             session = userSession
+            navigation = .main
         } catch {
             errorMessage = error.localizedDescription
         }
