@@ -2,6 +2,11 @@ import Foundation
 
 extension NetworkClient {
 
+    public static func `default`() -> NetworkClient {
+        let bundle = Bundle.main
+        return `default`(bundleIdentifier: bundle.bundleIdentifier)
+    }
+
     public static func `default`(bundleIdentifier: String?) -> NetworkClient {
         NetworkClient(
             baseURL: Environment.current.baseURL.absoluteString,

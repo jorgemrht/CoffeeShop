@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CF8D728F2E9C5DAC005ABAA1 /* CoffeShopModules in Frameworks */ = {isa = PBXBuildFile; productRef = CF8D728E2E9C5DAC005ABAA1 /* CoffeShopModules */; };
+		CF9A00012E9C5DAC005ABAA1 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = CF9A00112E9C5DAC005ABAA1 /* Data */; };
+		CF9A00022E9C5DAC005ABAA1 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = CF9A00122E9C5DAC005ABAA1 /* Domain */; };
+		CF9A00032E9C5DAC005ABAA1 /* Macros in Frameworks */ = {isa = PBXBuildFile; productRef = CF9A00132E9C5DAC005ABAA1 /* Macros */; };
+		CF9A00042E9C5DAC005ABAA1 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = CF9A00142E9C5DAC005ABAA1 /* DesignSystem */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +30,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF8D728F2E9C5DAC005ABAA1 /* CoffeShopModules in Frameworks */,
+				CF9A00012E9C5DAC005ABAA1 /* Data in Frameworks */,
+				CF9A00022E9C5DAC005ABAA1 /* Domain in Frameworks */,
+				CF9A00032E9C5DAC005ABAA1 /* Macros in Frameworks */,
+				CF9A00042E9C5DAC005ABAA1 /* DesignSystem in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +76,10 @@
 			);
 			name = CoffeeShop;
 			packageProductDependencies = (
-				CF8D728E2E9C5DAC005ABAA1 /* CoffeShopModules */,
+				CF9A00112E9C5DAC005ABAA1 /* Data */,
+				CF9A00122E9C5DAC005ABAA1 /* Domain */,
+				CF9A00132E9C5DAC005ABAA1 /* Macros */,
+				CF9A00142E9C5DAC005ABAA1 /* DesignSystem */,
 			);
 			productName = CoffeeShop;
 			productReference = CF36055B2E9C21FE007D2123 /* CoffeeShop.app */;
@@ -363,9 +372,25 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CF8D728E2E9C5DAC005ABAA1 /* CoffeShopModules */ = {
+		CF9A00112E9C5DAC005ABAA1 /* Data */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = CoffeShopModules;
+			package = CF8D728D2E9C5DAC005ABAA1 /* XCLocalSwiftPackageReference "../Modules" */;
+			productName = Data;
+		};
+		CF9A00122E9C5DAC005ABAA1 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF8D728D2E9C5DAC005ABAA1 /* XCLocalSwiftPackageReference "../Modules" */;
+			productName = Domain;
+		};
+		CF9A00132E9C5DAC005ABAA1 /* Macros */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF8D728D2E9C5DAC005ABAA1 /* XCLocalSwiftPackageReference "../Modules" */;
+			productName = Macros;
+		};
+		CF9A00142E9C5DAC005ABAA1 /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF8D728D2E9C5DAC005ABAA1 /* XCLocalSwiftPackageReference "../Modules" */;
+			productName = DesignSystem;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

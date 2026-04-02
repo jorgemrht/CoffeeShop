@@ -62,3 +62,7 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 CoffeeShop/.DS_Store
 .DS_Store
+*.resolved
+*.resolved
+Modules/Package.resolved
+Modules/Package.resolved

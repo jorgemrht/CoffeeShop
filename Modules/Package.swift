@@ -10,39 +10,30 @@ let package = Package(
     platforms: [.iOS(.v18), .macOS(.v14)],
     products: [
         .library(
+            name: "Data",
+            targets: ["Data"]
+        ),
+        .library(
+            name: "Domain",
+            targets: ["Domain"]
+        ),
+        .library(
+            name: "DesignSystem",
+            targets: ["DesignSystem"]
+        ),
+        .library(
+            name: "Macros",
+            targets: ["Macros"]
+        ),
+        .library(
             name: "CoffeShopModules",
-            targets: [
-                "AppNavigation",
-                "DesignSystem",
-                "SharedCore"
-            ]
+            targets: ["Data", "Domain", "DesignSystem", "Macros"]
         ),
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-syntax.git", exact: "602.0.0")
     ],
     targets: [
-        .target(
-            name: "AppNavigation",
-            dependencies: [
-                "SharedCore",
-                "FeatureSplash",
-                "FeatureLogin",
-                "FeatureRegister",
-                "FeatureShops",
-                "FeatureMain"
-            ]
-        ),
-        .target(
-            name: "SharedCore",
-            dependencies: [
-                "Data",
-                "Domain",
-                "DesignSystem",
-                "TestHelpers",
-                "Tracking"
-            ]
-        ),
         .target(
             name: "Data",
             dependencies: [
@@ -51,116 +42,31 @@ let package = Package(
             ]
         ),
         .target(
-            name: "DesignSystem"
-        ),
-        .target(
             name: "Domain",
-            dependencies: [ ]
+            dependencies: []
         ),
         .target(
-            name: "FeatureLogin",
-            dependencies: [
-                "SharedCore",
-                "FeatureRegister"
-            ]
-        ),
-        .target(
-            name: "FeatureRegister",
-            dependencies: [
-                "SharedCore"
-            ]
-        ),
-        .target(
-            name: "FeatureSplash",
-            dependencies: [
-                "SharedCore"
-            ]
-        ),
-        .target(
-            name: "FeatureShops",
-            dependencies: [
-                "SharedCore",
-                "DesignSystem",
-                "Tracking",
-                "TestHelpers"
-            ]
-        ),
-        .target(
-            name: "FeatureShopDetail",
-            dependencies: [
-                "SharedCore",
-                "DesignSystem"
-            ]
-        ),
-        .target(
-            name: "FeatureMain",
-            dependencies: [
-                "SharedCore",
-                "DesignSystem",
-                "FeatureCoffee",
-                "FeatureCoffeeDetail",
-                "FeatureShops",
-                "FeatureShopDetail",
-                "FeatureSettings",
-                "TestHelpers"
-            ]
-        ),
-        .target(
-            name: "FeatureCoffee",
-            dependencies: [
-                "SharedCore",
-                "DesignSystem",
-                "Tracking",
-                "TestHelpers"
-            ]
-        ),
-        .target(
-            name: "FeatureCoffeeDetail",
-            dependencies: [
-                "SharedCore",
-                "DesignSystem"
-            ]
-        ),
-        .target(
-            name: "FeatureSettings",
-            dependencies: [
-                "SharedCore",
-                "DesignSystem"
-            ]
-        ),
-        .target(
-            name: "Tracking",
-            dependencies: [
-                "Macros",
-            ]
+            name: "DesignSystem",
+            dependencies: []
         ),
         .macro(
             name: "MacrosPlugin",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
-                .product(name: "SwiftDiagnostics", package: "swift-syntax"), // Optional but recommended
-                .product(name: "SwiftSyntax", package: "swift-syntax"), // Optional but recommended
+                .product(name: "SwiftDiagnostics", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax")
             ]
         ),
         .target(
             name: "Macros",
             dependencies: ["MacrosPlugin"]
         ),
-        .target(
-            name: "TestHelpers",
-            dependencies: [
-                "Domain",
-                "Tracking",
-                "Data"
-            ]
-        ),
         .testTarget(
             name: "ModulesTests",
             dependencies: [
-                "SharedCore",
-                "Tracking",
-                "TestHelpers"
+                "Data",
+                "Domain"
             ]
         )
     ]
