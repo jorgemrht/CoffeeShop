@@ -9,13 +9,21 @@ public struct CoffeeShopsResponseDTO: Decodable {
 }
 
 extension CoffeeShopsResponseDTO {
-    var toDomain: CoffeeShops {
-        .init(id: id, title: title, description: description, image: image, url: url)
+    func toDomain() throws -> CoffeeShops {
+        guard let id = Int(id) else {
+            throw APIError.decodingFailed(CoffeeShopsResponseMappingError.invalidID(self.id))
+        }
+
+        return .init(id: id, title: title, description: description, image: image, url: url)
     }
 }
 
 extension [CoffeeShopsResponseDTO] {
-    func toDomain() -> [CoffeeShops] {
-        map(\.toDomain)
+    func toDomain() throws -> [CoffeeShops] {
+        try map { try $0.toDomain() }
     }
+}
+
+private enum CoffeeShopsResponseMappingError: Error {
+    case invalidID(String)
 }

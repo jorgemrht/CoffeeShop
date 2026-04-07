@@ -2,10 +2,10 @@ import SwiftUI
 
 #if DEBUG
 public extension View {
-    func withPreviewEnvironment(root: AppRoot = .main) -> some View {
+    func withPreviewEnvironment(root: AppNavigation.Root = .main) -> some View {
         self
-            .environment(AppState(root: root))
-            .environment(\.appDependencies, .mock)
+            .environment(AppNavigation(root: root))
+            .environment(\.appDependencies, .preview)
     }
 }
 #endif

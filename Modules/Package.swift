@@ -7,7 +7,7 @@ import CompilerPluginSupport
 let package = Package(
     name: "CoffeShopModules",
     defaultLocalization: "en",
-    platforms: [.iOS(.v18), .macOS(.v14)],
+    platforms: [.iOS(.v26), .macOS(.v26)],
     products: [
         .library(
             name: "Data",

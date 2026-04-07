@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "5F50C6C0-2B40-4D6F-A6A1-D1E2A9D1A1C2",
+      "name" : "Default",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:../Package.swift",
+      "identifier" : "ModulesTests",
+      "name" : "ModulesTests"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:../Package.swift",
+        "identifier" : "ModulesTests",
+        "name" : "ModulesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

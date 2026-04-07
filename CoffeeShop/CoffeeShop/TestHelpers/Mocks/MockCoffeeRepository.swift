@@ -8,61 +8,61 @@ public final class MockCoffeeRepository: CoffeeRepository {
     public func getCoffees() async throws -> [CoffeeShops] {
         [
             CoffeeShops(
-                id: "1",
+                id: 1,
                 title: "Espresso Bar",
                 description: "Bold and intense espresso specialties",
                 image: "https://placehold.co/200x200/8B4513/FFF?text=Espresso"
             ),
             CoffeeShops(
-                id: "2",
+                id: 2,
                 title: "Cappuccino Corner",
                 description: "Creamy and smooth cappuccinos",
                 image: "https://placehold.co/200x200/D2691E/FFF?text=Cappuccino"
             ),
             CoffeeShops(
-                id: "3",
+                id: 3,
                 title: "Latte Lounge",
                 description: "Mild and milky latte creations",
                 image: "https://placehold.co/200x200/CD853F/FFF?text=Latte"
             ),
             CoffeeShops(
-                id: "4",
+                id: 4,
                 title: "Americano Avenue",
                 description: "Strong yet smooth americano classics",
                 image: "https://placehold.co/200x200/A0522D/FFF?text=Americano"
             ),
             CoffeeShops(
-                id: "5",
+                id: 5,
                 title: "Mocha Mansion",
                 description: "Chocolate delight mochas",
                 image: "https://placehold.co/200x200/8B4513/FFF?text=Mocha"
             ),
             CoffeeShops(
-                id: "6",
+                id: 6,
                 title: "Macchiato Market",
                 description: "Espresso with a perfect touch",
                 image: "https://placehold.co/200x200/D2691E/FFF?text=Macchiato"
             ),
             CoffeeShops(
-                id: "7",
+                id: 7,
                 title: "Flat White Factory",
                 description: "Velvety microfoam masterpieces",
                 image: "https://placehold.co/200x200/CD853F/FFF?text=FlatWhite"
             ),
             CoffeeShops(
-                id: "8",
+                id: 8,
                 title: "Cold Brew Cafe",
                 description: "Smooth and refreshing cold brews",
                 image: "https://placehold.co/200x200/A0522D/FFF?text=ColdBrew"
             ),
             CoffeeShops(
-                id: "9",
+                id: 9,
                 title: "Affogato Atelier",
                 description: "Coffee meets dessert perfection",
                 image: "https://placehold.co/200x200/8B4513/FFF?text=Affogato"
             ),
             CoffeeShops(
-                id: "10",
+                id: 10,
                 title: "Cortado Central",
                 description: "Perfectly balanced cortados",
                 image: "https://placehold.co/200x200/D2691E/FFF?text=Cortado"

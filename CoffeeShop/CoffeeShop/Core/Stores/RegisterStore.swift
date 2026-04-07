@@ -1,72 +1,65 @@
-import SwiftUI
+import Foundation
 import Observation
 import Domain
 
 @MainActor
 @Observable
-public final class RegisterStore {
+public final class RegisterStore: StoreProtocol, StoreErrorProtocol {
 
     private let authRepository: AuthRepository
     private let logRepository: LogRepositoryImpl
-
-    public enum Navigation {
-        case main
-    }
+    private let registerValidator: any RegisterValidating
 
     public var email: String = ""
     public var password: String = ""
     public var confirmPassword: String = ""
     public var isLoading: Bool = false
-    public var errorMessage: String?
-    public var navigation: Navigation?
-    public private(set) var session: UserSession?
+    public var errorAlert: ErrorAlertPresentation?
 
-    public init(authRepository: AuthRepository, logRepository: LogRepositoryImpl) {
+    public init(
+        authRepository: AuthRepository,
+        logRepository: LogRepositoryImpl,
+        registerValidator: any RegisterValidating
+    ) {
         self.authRepository = authRepository
         self.logRepository = logRepository
+        self.registerValidator = registerValidator
     }
 
-    public init(appDependencies: AppDependencies) {
-        self.authRepository = appDependencies.makeAuthRepository()
-        self.logRepository = appDependencies.logRepository
-    }
-    
-    public var isRegisterEnabled: Bool {
-        !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        !password.isEmpty &&
-        !confirmPassword.isEmpty &&
-        password == confirmPassword &&
-        password.count >= 6 &&
-        !isLoading
+    public init(
+        environment: AppDependencies
+    ) {
+        self.authRepository = environment.makeAuthRepository()
+        self.logRepository = environment.logRepository
+        self.registerValidator = RegisterStoreValidator(
+            emailValidator: EmailValidator(),
+            passwordValidator: PasswordValidator(minimumLength: 6),
+            passwordConfirmationValidator: PasswordConfirmationValidator()
+        )
     }
 
-    public func register() async {
-        guard password == confirmPassword else {
-            errorMessage = "Las contraseñas no coinciden"
-            return
-        }
-
-        guard password.count >= 6 else {
-            errorMessage = "La contraseña debe tener al menos 6 caracteres"
-            return
-        }
-
-        guard !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            errorMessage = "El email es requerido"
-            return
-        }
-
-        isLoading = true
-        errorMessage = nil
-        defer { isLoading = false }
-
+    public func register() async -> Bool {
         do {
-            let userSession = try await authRepository.register(email: email, password: password)
-            session = userSession
-            navigation = .main
+            try registerValidator.validate(
+                email: email,
+                password: password,
+                confirmPassword: confirmPassword
+            )
+
+            let didRegister = try await withLoading {
+                _ = try await authRepository.register(email: email, password: password)
+                return true
+            }
+
+            return didRegister ?? false
         } catch {
-            errorMessage = error.localizedDescription
+            errorAlert = ErrorAlertPresentation(
+                title: "Registration Failed",
+                message: "We could not create your account at this time.",
+                dismissButtonTitle: "OK"
+            )
             await logRepository.log(.error, .authentication, error: error)
+            return false
         }
     }
 }

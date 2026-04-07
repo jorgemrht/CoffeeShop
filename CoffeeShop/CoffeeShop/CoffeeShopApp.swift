@@ -5,7 +5,7 @@ struct CoffeeShopApp: App {
     var body: some Scene {
         WindowGroup {
             AppRootView()
-                .environment(\.appDependencies, AppDependencies.current)
+                .environment(\.appDependencies, .preview)
         }
     }
 }

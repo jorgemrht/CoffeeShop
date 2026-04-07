@@ -1,4 +1,5 @@
 import Data
+import SwiftUI
 import Domain
 
 public struct AppDependencies {
@@ -7,6 +8,7 @@ public struct AppDependencies {
     public let logRepository: LogRepositoryImpl
     private let authRepositoryFactory: (() -> AuthRepository)?
     private let coffeeRepositoryFactory: (() -> CoffeeRepository)?
+    private let shopRepositoryFactory: (() -> ShopRepository)?
 
     public init(
         networkClient: NetworkClient,
@@ -16,38 +18,19 @@ public struct AppDependencies {
         self.logRepository = logRepository
         self.authRepositoryFactory = nil
         self.coffeeRepositoryFactory = nil
+        self.shopRepositoryFactory = nil
     }
+}
 
-    private init(
-        networkClient: NetworkClient,
-        logRepository: LogRepositoryImpl,
-        authRepositoryFactory: @escaping () -> AuthRepository,
-        coffeeRepositoryFactory: @escaping () -> CoffeeRepository
-    ) {
-        self.networkClient = networkClient
-        self.logRepository = logRepository
-        self.authRepositoryFactory = authRepositoryFactory
-        self.coffeeRepositoryFactory = coffeeRepositoryFactory
-    }
+public extension EnvironmentValues {
+    @Entry var appDependencies = AppDependencies.live
+}
 
-    public func makeAuthRepository() -> AuthRepository {
-        authRepositoryFactory?() ?? AuthRepositoryImpl(networkClient: networkClient)
-    }
+// Live
 
-    public func makeCoffeeRepository() -> CoffeeRepository {
-        coffeeRepositoryFactory?() ?? CoffeeRepositoryImpl(networkClient: networkClient)
-    }
-
-    @MainActor
-    public static var current: AppDependencies {
-        #if DEBUG
-        .preview
-        #else
-        .live
-        #endif
-    }
-
-    private static var live: AppDependencies {
+extension AppDependencies {
+    
+    public static var live: AppDependencies {
         let networkClient = NetworkClient.default()
         let logRepository = LogRepositoryImpl.default()
 
@@ -56,19 +39,54 @@ public struct AppDependencies {
             logRepository: logRepository
         )
     }
+    
+    public func makeAuthRepository() -> AuthRepository {
+        authRepositoryFactory?() ?? AuthRepositoryImpl(networkClient: networkClient)
+    }
 
-    private static var preview: AppDependencies {
+    public func makeCoffeeRepository() -> CoffeeRepository {
+        coffeeRepositoryFactory?() ?? CoffeeRepositoryImpl(networkClient: networkClient)
+    }
+
+    public func makeShopRepository() -> ShopRepository {
+        shopRepositoryFactory?() ?? ShopRepositoryImpl(networkClient: networkClient)
+    }
+}
+
+// Mocks
+
+extension AppDependencies {
+    
+    private init(
+        networkClient: NetworkClient,
+        logRepository: LogRepositoryImpl,
+        authRepositoryFactory: @escaping () -> AuthRepository,
+        coffeeRepositoryFactory: @escaping () -> CoffeeRepository,
+        shopRepositoryFactory: @escaping () -> ShopRepository
+    ) {
+        self.networkClient = networkClient
+        self.logRepository = logRepository
+        self.authRepositoryFactory = authRepositoryFactory
+        self.coffeeRepositoryFactory = coffeeRepositoryFactory
+        self.shopRepositoryFactory = shopRepositoryFactory
+    }
+
+    
+    public static var preview: AppDependencies {
+        mockDependencies()
+    }
+    
+    public static var test: AppDependencies {
+        mockDependencies()
+    }
+    
+    private static func mockDependencies() -> AppDependencies {
         AppDependencies(
             networkClient: PreviewHelper.mockNetworkClient,
             logRepository: MockLogRepository.mock,
             authRepositoryFactory: { MockAuthRepository() },
-            coffeeRepositoryFactory: { MockCoffeeRepository() }
+            coffeeRepositoryFactory: { MockCoffeeRepository() },
+            shopRepositoryFactory: { MockShopRepository() }
         )
     }
 }
-
-#if DEBUG
-public extension AppDependencies {
-    static var mock: AppDependencies { .current }
-}
-#endif
