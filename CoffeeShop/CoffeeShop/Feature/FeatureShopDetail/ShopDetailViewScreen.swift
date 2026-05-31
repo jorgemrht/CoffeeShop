@@ -45,6 +45,7 @@ public struct ShopDetailViewScreen: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         ShopDetailViewScreen(shopId: 1)
@@ -52,3 +53,4 @@ public struct ShopDetailViewScreen: View {
     .environment(ShopsRouter())
     .withPreviewEnvironment()
 }
+#endif

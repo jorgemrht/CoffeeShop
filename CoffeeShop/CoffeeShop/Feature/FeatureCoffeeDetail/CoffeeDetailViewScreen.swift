@@ -55,9 +55,11 @@ public struct CoffeeDetailViewScreen: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         CoffeeDetailViewScreen(coffeeId: 1, environment: .preview)
     }
     .withPreviewEnvironment()
 }
+#endif

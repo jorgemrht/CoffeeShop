@@ -196,7 +196,6 @@ struct BearerAuthInterceptorTests {
     @Test func interceptorWorksWithAsyncTokenProvider() async throws {
         // Given
         let tokenProvider: @Sendable () async -> Token? = {
-            try? await Task.sleep(for: .milliseconds(10))
             return Token(value: "async-token", expiry: Date().addingTimeInterval(3600))
         }
         let interceptor = BearerAuthInterceptor(tokenProvider: tokenProvider)

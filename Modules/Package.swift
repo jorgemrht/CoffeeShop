@@ -1,8 +1,17 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.3
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 import CompilerPluginSupport
+
+let packageSwiftSettings: [SwiftSetting] = [
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+    .enableUpcomingFeature("InferIsolatedConformances")
+]
+
+let uiSwiftSettings: [SwiftSetting] = packageSwiftSettings + [
+    .defaultIsolation(MainActor.self)
+]
 
 let package = Package(
     name: "CoffeShopModules",
@@ -31,7 +40,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", exact: "602.0.0")
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", exact: "603.0.1")
     ],
     targets: [
         .target(
@@ -39,15 +48,18 @@ let package = Package(
             dependencies: [
                 "Domain",
                 "Macros"
-            ]
+            ],
+            swiftSettings: packageSwiftSettings
         ),
         .target(
             name: "Domain",
-            dependencies: []
+            dependencies: [],
+            swiftSettings: packageSwiftSettings
         ),
         .target(
             name: "DesignSystem",
-            dependencies: []
+            dependencies: [],
+            swiftSettings: uiSwiftSettings
         ),
         .macro(
             name: "MacrosPlugin",
@@ -56,18 +68,21 @@ let package = Package(
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
                 .product(name: "SwiftDiagnostics", package: "swift-syntax"),
                 .product(name: "SwiftSyntax", package: "swift-syntax")
-            ]
+            ],
+            swiftSettings: packageSwiftSettings
         ),
         .target(
             name: "Macros",
-            dependencies: ["MacrosPlugin"]
+            dependencies: ["MacrosPlugin"],
+            swiftSettings: packageSwiftSettings
         ),
         .testTarget(
             name: "ModulesTests",
             dependencies: [
                 "Data",
                 "Domain"
-            ]
+            ],
+            swiftSettings: packageSwiftSettings
         )
     ]
 )

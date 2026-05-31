@@ -61,7 +61,7 @@ public struct RegisterViewScreen: View {
             .frame(height: 50)
             .background(registerStore.isLoading ? Color.gray : Color.blue)
             .foregroundStyle(.white)
-            .cornerRadius(12)
+            .clipShape(.rect(cornerRadius: 12))
             .disabled(registerStore.isLoading)
             .padding(.horizontal, 24)
             .padding(.top, 8)
@@ -89,9 +89,11 @@ public struct RegisterViewScreen: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         RegisterViewScreen(environment: .preview)
     }
     .withPreviewEnvironment()
 }
+#endif

@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import Domain
 
@@ -18,3 +19,4 @@ public struct MockLogRepository {
         )
     }
 }
+#endif

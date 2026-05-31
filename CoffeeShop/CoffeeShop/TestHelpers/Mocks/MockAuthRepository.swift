@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import Domain
 
@@ -54,3 +55,4 @@ public enum MockAuthError: Error, LocalizedError {
         }
     }
 }
+#endif

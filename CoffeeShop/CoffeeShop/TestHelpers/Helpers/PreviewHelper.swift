@@ -1,3 +1,4 @@
+#if DEBUG
 import SwiftUI
 import Data
 import Domain
@@ -12,3 +13,4 @@ public struct PreviewHelper {
         )
     }
 }
+#endif

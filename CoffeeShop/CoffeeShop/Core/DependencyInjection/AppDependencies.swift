@@ -31,7 +31,8 @@ public extension EnvironmentValues {
 extension AppDependencies {
     
     public static var live: AppDependencies {
-        let networkClient = NetworkClient.default()
+        let bundle = Bundle.main
+        let networkClient = NetworkClient.default(bundleIdentifier: bundle.bundleIdentifier)
         let logRepository = LogRepositoryImpl.default()
 
         return AppDependencies(
@@ -53,8 +54,8 @@ extension AppDependencies {
     }
 }
 
+#if DEBUG
 // Mocks
-
 extension AppDependencies {
     
     private init(
@@ -90,3 +91,4 @@ extension AppDependencies {
         )
     }
 }
+#endif

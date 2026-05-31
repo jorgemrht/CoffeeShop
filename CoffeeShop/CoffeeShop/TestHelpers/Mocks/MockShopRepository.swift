@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import Domain
 
@@ -9,3 +10,4 @@ public final class MockShopRepository: ShopRepository {
         [1, 2, 3, 4, 5]
     }
 }
+#endif

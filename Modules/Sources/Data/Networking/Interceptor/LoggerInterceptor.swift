@@ -52,7 +52,7 @@ public struct LoggerInterceptor: RequestInterceptor {
     public func intercept(
         request: URLRequest,
         session: URLSession,
-        next: @escaping (URLRequest, URLSession) async throws -> APIResponse
+        next: @escaping @Sendable (URLRequest, URLSession) async throws -> APIResponse
     ) async throws -> APIResponse {
 
         let signpostID = signposter.makeSignpostID()

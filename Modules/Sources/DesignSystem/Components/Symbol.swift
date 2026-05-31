@@ -7,7 +7,7 @@ public enum Symbol: Sendable {
     case settings
     case shop
 
-    var systemName: String {
+    public var systemName: String {
         switch self {
         case .close:
             "xmark"

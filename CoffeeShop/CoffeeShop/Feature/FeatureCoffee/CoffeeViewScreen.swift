@@ -63,6 +63,7 @@ public struct CoffeeViewScreen: View {
 
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         CoffeeViewScreen(environment: .preview)
@@ -70,3 +71,4 @@ public struct CoffeeViewScreen: View {
     .environment(CoffeeRouter())
     .withPreviewEnvironment()
 }
+#endif

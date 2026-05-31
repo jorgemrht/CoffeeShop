@@ -54,9 +54,11 @@ public struct RememberPasswordViewScreen: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         RememberPasswordViewScreen(environment: .preview)
     }
     .withPreviewEnvironment(root: .auth)
 }
+#endif

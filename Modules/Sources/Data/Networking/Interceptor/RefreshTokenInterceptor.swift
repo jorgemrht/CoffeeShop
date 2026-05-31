@@ -18,18 +18,20 @@ public final actor RefreshTokenInterceptor: RequestInterceptor {
     public func intercept(
         request: URLRequest,
         session: URLSession,
-        next: @escaping (URLRequest, URLSession) async throws -> APIResponse
+        next: @escaping @Sendable (URLRequest, URLSession) async throws -> APIResponse
     ) async throws -> APIResponse {
 
         if request.value(forHTTPHeaderField: "X-Bypass-Refresh") == "1" {
-            return try await next(request, session)
+            var bypassedRequest = request
+            bypassedRequest.setValue(nil, forHTTPHeaderField: "X-Bypass-Refresh")
+            return try await next(bypassedRequest, session)
         }
 
         do {
             return try await next(request, session)
         } catch let apiError as APIError {
 
-            guard case .serverError(let resp) = apiError, resp.statusCode == 401 else {
+            guard apiError.requiresTokenRefresh else {
                 throw apiError
             }
 
@@ -79,6 +81,19 @@ public final actor RefreshTokenInterceptor: RequestInterceptor {
         } catch {
             ongoingRefresh = nil
             throw error
+        }
+    }
+}
+
+private extension APIError {
+    var requiresTokenRefresh: Bool {
+        switch self {
+        case .unauthorized:
+            true
+        case .serverError(let response):
+            response.statusCode == 401
+        default:
+            false
         }
     }
 }

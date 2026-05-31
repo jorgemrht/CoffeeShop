@@ -16,7 +16,9 @@ public struct AuthRepositoryImpl: AuthRepository, Sendable {
                 LoginEndpoints.login(email: email, password: password).endpoint
             )
 
-            return try response.decoded(LoginResponseDTO.self).toDomain()
+            let session = try response.decoded(LoginResponseDTO.self).toDomain()
+            try await networkClient.saveSession(session)
+            return session
         } catch let apiError as APIError {
             throw apiError.toDomain()
         } catch {
@@ -30,7 +32,9 @@ public struct AuthRepositoryImpl: AuthRepository, Sendable {
                 LoginEndpoints.register(email: email, password: password).endpoint
             )
 
-            return try response.decoded(LoginResponseDTO.self).toDomain()
+            let session = try response.decoded(LoginResponseDTO.self).toDomain()
+            try await networkClient.saveSession(session)
+            return session
         } catch let apiError as APIError {
             throw apiError.toDomain()
         } catch {

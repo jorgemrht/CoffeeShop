@@ -3,9 +3,10 @@ import SwiftUI
 public struct SplashViewScreen: View {
 
     @State private var opacity: Double = 0
-    private let onFinish: @MainActor (Destination) -> Void
+    @State private var splashStore = SplashStore()
+    private let onFinish: @MainActor (SplashDestination) -> Void
 
-    public init(onFinish: @escaping @MainActor (Destination) -> Void = { _ in }) {
+    public init(onFinish: @escaping @MainActor (SplashDestination) -> Void = { _ in }) {
         self.onFinish = onFinish
     }
 
@@ -24,20 +25,18 @@ public struct SplashViewScreen: View {
                 opacity = 1.0
             }
 
-            try? await Task.sleep(for: .seconds(2))
-            onFinish(.auth)
+            guard let destination = await splashStore.nextDestination() else {
+                return
+            }
+
+            onFinish(destination)
         }
     }
 }
 
-public extension SplashViewScreen {
-    nonisolated enum Destination: Sendable {
-        case auth
-        case main
-    }
-}
-
+#if DEBUG
 #Preview {
     SplashViewScreen()
         .withPreviewEnvironment(root: .splash)
 }
+#endif

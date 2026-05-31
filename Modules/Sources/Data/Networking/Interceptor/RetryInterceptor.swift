@@ -34,7 +34,7 @@ public struct RetryInterceptor: RequestInterceptor {
       public func intercept(
           request: URLRequest,
           session: URLSession,
-          next: @escaping (URLRequest, URLSession) async throws -> APIResponse
+          next: @escaping @Sendable (URLRequest, URLSession) async throws -> APIResponse
       ) async throws -> APIResponse {
 
           for attempt in 0..<maxAttempts {
@@ -149,4 +149,3 @@ public struct RetryInterceptor: RequestInterceptor {
           return formatter.date(from: dateString)
       }
   }
-

@@ -1,4 +1,5 @@
 import Foundation
+import Domain
 import OSLog
 
 // HTTP/2 Multiplexing: https://developer.apple.com/videos/play/wwdc2024/10064/
@@ -11,17 +12,20 @@ public final class NetworkClient: Sendable {
     private let baseURL: String
     private let session: URLSession
     private let interceptors: [RequestInterceptor]
+    private let authManager: AuthManager?
     private let logger: Logger
 
     public init(
         baseURL: String,
         session: URLSession = .shared,
         interceptors: [RequestInterceptor],
+        authManager: AuthManager? = nil,
         bundleIdentifier: String? = nil
     ) {
         self.baseURL = baseURL
         self.session = session
         self.interceptors = interceptors
+        self.authManager = authManager
         self.logger = Logger(
             subsystem: bundleIdentifier ?? "modules",
             category: "NetworkClient"
@@ -38,7 +42,7 @@ public final class NetworkClient: Sendable {
                 guard let http = urlResponse as? HTTPURLResponse else {
                     throw APIError.unknownError(URLError(.badServerResponse))
                 }
-                return .init(request: request, response: http, data: data)
+                return try APIResponse(request: request, response: http, data: data).validate()
             }
 
             for interceptor in interceptors.reversed() {
@@ -48,7 +52,7 @@ public final class NetworkClient: Sendable {
                 }
             }
             
-            let response = try await next(urlRequest, session).validate()
+            let response = try await next(urlRequest, session)
             logger.info("\(endpoint.path) → \(response.statusCode)")
             return response
 
@@ -60,6 +64,10 @@ public final class NetworkClient: Sendable {
             throw APIError.unknownError(error)
         }
 
+    }
+
+    func saveSession(_ session: UserSession) async throws {
+        try await authManager?.saveSession(session)
     }
 }
 

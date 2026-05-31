@@ -10,32 +10,30 @@ public struct MainViewScreen: View {
         @Bindable var mainRouter = mainRouter
 
         TabView(selection: $mainRouter.selectedTab) {
-            CoffeeNavigationView()
-                .tabItem {
-                    Label {
-                        Text("Coffee")
-                    } icon: {
-                        SymbolImage(.coffee, accessibility: .decorative)
-                    }
-                }
-                .tag(MainRouter.Tab.coffee)
+            Tab(
+                "Coffee",
+                systemImage: Symbol.coffee.systemName,
+                value: MainRouter.Tab.coffee
+            ) {
+                CoffeeNavigationView()
+            }
 
-            ShopsNavigationView()
-                .tabItem {
-                    Label {
-                        Text("Shops")
-                    } icon: {
-                        SymbolImage(.shop, accessibility: .decorative)
-                    }
-                }
-                .tag(MainRouter.Tab.shops)
+            Tab(
+                "Shops",
+                systemImage: Symbol.shop.systemName,
+                value: MainRouter.Tab.shops
+            ) {
+                ShopsNavigationView()
+            }
         }
         .backgroundView()
     }
 }
 
+#if DEBUG
 #Preview {
     MainViewScreen()
         .environment(MainRouter())
         .withPreviewEnvironment()
 }
+#endif

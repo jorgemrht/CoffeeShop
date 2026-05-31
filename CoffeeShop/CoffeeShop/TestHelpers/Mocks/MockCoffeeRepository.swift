@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import Domain
 
@@ -79,3 +80,4 @@ public final class MockCoffeeRepository: CoffeeRepository {
         )
     }
 }
+#endif

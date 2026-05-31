@@ -57,6 +57,7 @@ public struct ShopsViewScreen: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         ShopsViewScreen(environment: .preview)
@@ -64,3 +65,4 @@ public struct ShopsViewScreen: View {
     .environment(ShopsRouter())
     .withPreviewEnvironment()
 }
+#endif

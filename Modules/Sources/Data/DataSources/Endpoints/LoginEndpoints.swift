@@ -4,6 +4,7 @@ public enum LoginEndpoints {
     
     case login(email: String, password: String)
     case register(email: String, password: String)
+    case refresh(token: String)
 
     public var endpoint: APIEndpoint {
         switch self {
@@ -21,6 +22,14 @@ public enum LoginEndpoints {
                 method: .POST,
                 queryItems: nil,
                 body: RegisterRequestDTO(email: email, password: password)
+            )
+
+        case .refresh(let token):
+            APIEndpoint(
+                path: "/auth/refresh",
+                method: .POST,
+                queryItems: nil,
+                body: RefreshTokenRequestDTO(refreshToken: token)
             )
         }
     }

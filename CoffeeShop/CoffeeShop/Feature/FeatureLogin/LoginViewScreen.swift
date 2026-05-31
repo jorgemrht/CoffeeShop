@@ -75,6 +75,7 @@ public struct LoginViewScreen: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         LoginViewScreen(environment: .preview)
@@ -82,3 +83,4 @@ public struct LoginViewScreen: View {
     .environment(AuthRouter())
     .withPreviewEnvironment()
 }
+#endif

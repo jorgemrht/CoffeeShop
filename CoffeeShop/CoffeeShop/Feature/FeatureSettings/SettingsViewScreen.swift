@@ -33,9 +33,11 @@ public struct SettingsViewScreen: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         SettingsViewScreen(environment: .preview)
     }
     .withPreviewEnvironment()
 }
+#endif

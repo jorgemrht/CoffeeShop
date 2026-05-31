@@ -1,3 +1,4 @@
+#if DEBUG
 import Foundation
 import Domain
 
@@ -16,3 +17,4 @@ public struct MockAppInfoProvider {
         self.deviceModel = deviceModel
     }
 }
+#endif
