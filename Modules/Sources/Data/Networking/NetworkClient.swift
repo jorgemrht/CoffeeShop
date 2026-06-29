@@ -12,20 +12,17 @@ public final class NetworkClient: Sendable {
     private let baseURL: String
     private let session: URLSession
     private let interceptors: [RequestInterceptor]
-    private let authManager: AuthManager?
     private let logger: Logger
 
     public init(
         baseURL: String,
         session: URLSession = .shared,
         interceptors: [RequestInterceptor],
-        authManager: AuthManager? = nil,
         bundleIdentifier: String? = nil
     ) {
         self.baseURL = baseURL
         self.session = session
         self.interceptors = interceptors
-        self.authManager = authManager
         self.logger = Logger(
             subsystem: bundleIdentifier ?? "modules",
             category: "NetworkClient"
@@ -67,7 +64,7 @@ public final class NetworkClient: Sendable {
     }
 
     func saveSession(_ session: UserSession) async throws {
-        try await authManager?.saveSession(session)
+        _ = session
     }
 }
 

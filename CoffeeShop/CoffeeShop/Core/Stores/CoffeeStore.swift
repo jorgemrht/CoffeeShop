@@ -1,6 +1,7 @@
 import SwiftUI
 import Observation
 import Domain
+import Foundation
 
 @MainActor
 @Observable
@@ -42,7 +43,7 @@ public final class CoffeeStore: StoreProtocol, StoreErrorProtocol {
         }
     }
 
-    public func loadCoffeeDetail(id: Int) async {
+    public func loadCoffeeDetail(id: UUID) async {
         do {
             try await withLoading {
                 coffeeDetail = try await coffeeRepository.getCoffeeDetail(id: id)

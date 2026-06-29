@@ -9,13 +9,13 @@ public struct ShopRepositoryImpl: ShopRepository, Sendable {
         self.networkClient = networkClient
     }
 
-    public func getShops() async throws -> [Int] {
+    public func getShops() async throws -> [UUID] {
         do {
             let response = try await networkClient.request(
                 ShopEndpoints.shops.endpoint
             )
 
-            return try response.decoded([Int].self)
+            return try response.decoded([UUID].self)
         } catch let apiError as APIError {
             throw apiError.toDomain()
         } catch {

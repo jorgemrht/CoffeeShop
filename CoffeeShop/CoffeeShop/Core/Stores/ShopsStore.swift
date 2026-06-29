@@ -1,6 +1,7 @@
 import SwiftUI
 import Observation
 import Domain
+import Foundation
 
 @MainActor
 @Observable
@@ -9,7 +10,7 @@ public final class ShopsStore: StoreProtocol, StoreErrorProtocol {
     private let shopRepository: ShopRepository
     private let logRepository: LogRepositoryImpl
     public var isLoading: Bool = false
-    public var shops: [Int] = []
+    public var shops: [UUID] = []
     public var errorAlert: ErrorAlertPresentation?
 
     public init(

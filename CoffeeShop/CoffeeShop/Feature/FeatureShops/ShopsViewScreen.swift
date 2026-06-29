@@ -1,4 +1,5 @@
 import DesignSystem
+import Foundation
 import SwiftUI
 
 public struct ShopsViewScreen: View {
@@ -22,7 +23,7 @@ public struct ShopsViewScreen: View {
                                 .foregroundStyle(.blue)
 
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Shop #\(shopID)")
+                                Text("Shop #\(shopID.uuidString)")
                                     .font(.headline)
 
                                 Text("Tap to see details")

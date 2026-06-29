@@ -1,10 +1,12 @@
+import Foundation
 import Domain
 
 public struct CoffeeDetailResponseDTO: Decodable {
-    public let id: Int
+    public let id: UUID
     public let name: String
-    public let specialty: String
-    public let summary: String
+    public let rating: Double
+    public let img: String
+    public let description: String
 }
 
 extension CoffeeDetailResponseDTO {
@@ -12,8 +14,9 @@ extension CoffeeDetailResponseDTO {
         CoffeeDetail(
             id: id,
             name: name,
-            specialty: specialty,
-            summary: summary
+            rating: rating,
+            img: img,
+            description: description
         )
     }
 }

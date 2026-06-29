@@ -1,12 +1,13 @@
 import DesignSystem
+import Foundation
 import SwiftUI
 
 public struct ShopDetailViewScreen: View {
 
     @Environment(ShopsRouter.self) private var shopsRouter
-    private let shopId: Int
+    private let shopId: UUID
 
-    public init(shopId: Int) {
+    public init(shopId: UUID) {
         self.shopId = shopId
     }
 
@@ -16,7 +17,7 @@ public struct ShopDetailViewScreen: View {
                 .font(.system(size: 80))
                 .foregroundStyle(.blue)
 
-            Text("Shop \(shopId)")
+            Text("Shop \(shopId.uuidString)")
                 .font(.title)
                 .fontWeight(.bold)
 
@@ -28,11 +29,11 @@ public struct ShopDetailViewScreen: View {
                 shopsRouter.push(.coffeeDetail(id: shopId))
             } label: {
                 Label {
-                    Text("See Coffee \(shopId)")
+                    Text("See Coffee \(shopId.uuidString)")
                 } icon: {
                     SymbolImage(.coffee, accessibility: .decorative)
                 }
-                    .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .padding(.horizontal)
@@ -48,7 +49,7 @@ public struct ShopDetailViewScreen: View {
 #if DEBUG
 #Preview {
     NavigationStack {
-        ShopDetailViewScreen(shopId: 1)
+        ShopDetailViewScreen(shopId: UUID())
     }
     .environment(ShopsRouter())
     .withPreviewEnvironment()

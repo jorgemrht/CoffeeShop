@@ -1,4 +1,5 @@
 import Observation
+import Foundation
 
 @MainActor
 @Observable
@@ -10,6 +11,6 @@ public final class CoffeeRouter: NavigationRouter {
 
 public extension CoffeeRouter {
     nonisolated enum Route: Sendable, Hashable {
-        case detail(id: Int)
+        case detail(id: UUID)
     }
 }

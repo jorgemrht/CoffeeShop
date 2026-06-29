@@ -19,8 +19,8 @@ public struct Token: Sendable, Codable {
     public init(session: UserSession) {
         self.init(
             value: session.token,
-            refreshValue: session.refreshToken,
-            expiry: session.expiry
+            refreshValue: nil,
+            expiry: nil
         )
     }
 

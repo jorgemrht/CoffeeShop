@@ -1,15 +1,17 @@
 import Foundation
 
 public struct CoffeeDetail: Identifiable, Hashable, Sendable {
-    public let id: Int
+    public let id: UUID
     public let name: String
-    public let specialty: String
-    public let summary: String
+    public let rating: Double
+    public let img: String
+    public let description: String
 
-    public init(id: Int, name: String, specialty: String, summary: String) {
+    public init(id: UUID, name: String, rating: Double, img: String, description: String) {
         self.id = id
         self.name = name
-        self.specialty = specialty
-        self.summary = summary
+        self.rating = rating
+        self.img = img
+        self.description = description
     }
 }

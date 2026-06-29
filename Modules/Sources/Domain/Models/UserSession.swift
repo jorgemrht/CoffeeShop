@@ -1,17 +1,20 @@
 import Foundation
 
 public struct UserSession: Sendable {
+    public let username: String
+    public let email: String
+    public let isValidateEmail: Bool
     public let token: String
-    public let refreshToken: String?
-    public let expiry: Date?
-    
+
     public init(
-        token: String,
-        refreshToken: String? = nil,
-        expiry: Date? = nil
+        username: String,
+        email: String,
+        isValidateEmail: Bool,
+        token: String
     ) {
+        self.username = username
+        self.email = email
+        self.isValidateEmail = isValidateEmail
         self.token = token
-        self.refreshToken = refreshToken
-        self.expiry = expiry
     }
 }

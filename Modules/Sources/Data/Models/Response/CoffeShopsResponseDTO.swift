@@ -1,16 +1,17 @@
+import Foundation
 import Domain
 
 public struct CoffeeShopsResponseDTO: Decodable {
-    let id: Int
-    let title: String
+    let id: UUID
+    let name: String
+    let rating: Double
+    let img: String
     let description: String
-    let image: String
-    let url: String?
 }
 
 extension CoffeeShopsResponseDTO {
     func toDomain() -> CoffeeShops {
-        .init(id: id, title: title, description: description, image: image, url: url)
+        .init(id: id, name: name, rating: rating, img: img, description: description)
     }
 }
 

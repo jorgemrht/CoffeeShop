@@ -23,7 +23,7 @@ public struct CoffeeRepositoryImpl: CoffeeRepository, Sendable {
         }
     }
 
-    public func getCoffeeDetail(id: Int) async throws -> CoffeeDetail {
+    public func getCoffeeDetail(id: UUID) async throws -> CoffeeDetail {
         do {
             let response = try await networkClient.request(
                 CoffeeEndpoints.detail(id: id).endpoint

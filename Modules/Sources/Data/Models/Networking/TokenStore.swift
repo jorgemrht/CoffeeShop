@@ -1,24 +1,20 @@
 import Foundation
 
 public actor TokenStore {
-    private let keychain: KeychainTokenStore
+    private var currentToken: Token?
 
-    public init(
-        service: String,
-        account: String = "auth-token"
-    ) {
-        self.keychain = KeychainTokenStore(service: service, account: account)
+    public init() {
     }
 
     public func token() async throws -> Token? {
-        try await keychain.token()
+        currentToken
     }
 
     public func save(_ token: Token) async throws {
-        try await keychain.save(token)
+        currentToken = token
     }
 
     public func clear() async throws {
-        try await keychain.clear()
+        currentToken = nil
     }
 }

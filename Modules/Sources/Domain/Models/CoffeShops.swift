@@ -1,30 +1,29 @@
 import Foundation
 
 public struct CoffeeShops: Identifiable, Hashable, Sendable {
-    public let id: Int
-    public let title: String
+    public let id: UUID
+    public let name: String
+    public let rating: Double
+    public let img: String
     public let description: String
-    public let image: String
-    public let url: String?
-    
-    public init(id: Int, title: String, description: String, image: String, url: String? = nil) {
-        self.id = id
-        self.title = title
-        self.description = description
-        self.image = image
-        self.url = url
-    }
 
+    public init(id: UUID, name: String, rating: Double, img: String, description: String) {
+        self.id = id
+        self.name = name
+        self.rating = rating
+        self.img = img
+        self.description = description
+    }
 }
 
 extension CoffeeShops {
     static var placeholder: Self {
         .init(
-            id: 0,
-            title: "Coffe Shops Demo",
-            description: "the best specialty coffee in the city or not ... Believe me!",
-            image: "https://placehold.co/200x200.png",
-            url: "https://placehold.co/200x200.png"
+            id: UUID(),
+            name: "Coffee Shop Demo",
+            rating: 4.8,
+            img: "https://placehold.co/200x200.png",
+            description: "The best specialty coffee in the city or not... believe me!"
         )
     }
 

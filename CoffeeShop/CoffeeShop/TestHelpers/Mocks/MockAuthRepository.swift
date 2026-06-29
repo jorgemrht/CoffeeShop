@@ -22,7 +22,12 @@ public final class MockAuthRepository: AuthRepository {
         try await Task.sleep(for: .seconds(delaySeconds))
 
         if shouldSucceed {
-            return UserSession(token: mockToken)
+            return UserSession(
+                username: "mock-user",
+                email: email,
+                isValidateEmail: true,
+                token: mockToken
+            )
         } else {
             throw MockAuthError.invalidCredentials
         }
@@ -32,7 +37,12 @@ public final class MockAuthRepository: AuthRepository {
         try await Task.sleep(for: .seconds(delaySeconds))
 
         if shouldSucceed {
-            return UserSession(token: mockToken)
+            return UserSession(
+                username: "mock-user",
+                email: email,
+                isValidateEmail: true,
+                token: mockToken
+            )
         } else {
             throw MockAuthError.userAlreadyExists
         }

@@ -13,7 +13,11 @@ public struct AuthRepositoryImpl: AuthRepository, Sendable {
     public func login(email: String, password: String) async throws -> UserSession {
         do {
             let response = try await networkClient.request(
-                LoginEndpoints.login(email: email, password: password).endpoint
+                LoginEndpoints.login(
+                    email: email,
+                    password: password,
+                    deviceId: deviceId
+                ).endpoint
             )
 
             let session = try response.decoded(LoginResponseDTO.self).toDomain()
@@ -40,5 +44,11 @@ public struct AuthRepositoryImpl: AuthRepository, Sendable {
         } catch {
             throw AppError.internalError(error)
         }
+    }
+}
+
+private extension AuthRepositoryImpl {
+    var deviceId: String {
+        UUID().uuidString
     }
 }

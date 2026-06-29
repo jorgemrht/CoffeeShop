@@ -6,9 +6,9 @@ public struct CoffeeDetailViewScreen: View {
 
     @State private var coffeeStore: CoffeeStore
 
-    let coffeeId: Int
+    let coffeeId: UUID
 
-    public init(coffeeId: Int, environment: AppDependencies) {
+    public init(coffeeId: UUID, environment: AppDependencies) {
         self.coffeeId = coffeeId
         _coffeeStore = State(initialValue: CoffeeStore(environment: environment))
     }
@@ -25,11 +25,7 @@ public struct CoffeeDetailViewScreen: View {
                         .font(.title)
                         .fontWeight(.bold)
 
-                    Text(coffee.specialty)
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-
-                    Text(coffee.summary)
+                    Text(coffee.description)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -58,7 +54,7 @@ public struct CoffeeDetailViewScreen: View {
 #if DEBUG
 #Preview {
     NavigationStack {
-        CoffeeDetailViewScreen(coffeeId: 1, environment: .preview)
+        CoffeeDetailViewScreen(coffeeId: UUID(), environment: .preview)
     }
     .withPreviewEnvironment()
 }

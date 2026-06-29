@@ -3,7 +3,7 @@ import Foundation
 public enum CoffeeEndpoints {
 
     case list
-    case detail(id: Int)
+    case detail(id: UUID)
 
     public var endpoint: APIEndpoint {
         switch self {

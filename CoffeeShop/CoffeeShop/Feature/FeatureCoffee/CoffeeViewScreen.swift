@@ -45,7 +45,7 @@ public struct CoffeeViewScreen: View {
                 .foregroundStyle(.brown)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(coffee.title)
+                Text(coffee.name)
                     .font(.headline)
 
                 Text(coffee.description)
