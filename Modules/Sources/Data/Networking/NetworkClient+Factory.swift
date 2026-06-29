@@ -18,16 +18,32 @@ extension NetworkClient {
     private static func makeDefault(
         bundleIdentifier: String?
     ) -> NetworkClient {
-        NetworkClient(
-            baseURL: Environment.current.baseURL.absoluteString,
+        let configuration = NetworkClientConfiguration.live(bundleIdentifier: bundleIdentifier)
+        let keychainDataSource = KeychainDataSourceImpl()
+        let tokenStore = TokenStore(
+            keychainDataSource: keychainDataSource,
+            service: configuration.keychainService
+        )
+
+        return NetworkClient(
+            baseURL: configuration.baseURL,
             session: .apiDefault(),
-            interceptors: createDefaultInterceptors(subsystem: bundleIdentifier),
-            bundleIdentifier: bundleIdentifier
+            interceptors: createDefaultInterceptors(
+                subsystem: configuration.subsystem,
+                tokenStore: tokenStore,
+                keychainDataSource: keychainDataSource,
+                keychainService: configuration.keychainService
+            ),
+            subsystem: configuration.subsystem,
+            tokenStore: tokenStore
         )
     }
 
     private static func createDefaultInterceptors(
-        subsystem: String?
+        subsystem: String,
+        tokenStore: TokenStore,
+        keychainDataSource: any KeychainDataSource,
+        keychainService: String
     ) -> [RequestInterceptor] {
         let loggingConfig = LoggingConfiguration.current
         let loggerInterceptor = loggingConfig.createInterceptor(
@@ -38,6 +54,19 @@ extension NetworkClient {
         var interceptors: [RequestInterceptor] = []
 
         interceptors.append(RetryInterceptor())
+        interceptors.append(
+            BearerAuthInterceptor(
+                tokenProvider: {
+                    try? await tokenStore.token()
+                }
+            )
+        )
+        interceptors.append(
+            PayloadSecurityInterceptor(
+                keychainDataSource: keychainDataSource,
+                keychainService: keychainService
+            )
+        )
         interceptors.append(loggerInterceptor)
 
         return interceptors

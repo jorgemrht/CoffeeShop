@@ -8,15 +8,19 @@ struct LoginEndpointsTests {
         // Given
         let email = "user@test.com"
         let password = "password123"
+        let deviceId = UUID().uuidString
 
         // When
-        let endpoint = LoginEndpoints.login(email: email, password: password).endpoint
+        let endpoint = LoginEndpoints.login(
+            email: email,
+            password: password,
+            deviceId: deviceId
+        ).endpoint
 
         // Then
-        #expect(endpoint.path == "/auth/login")
+        #expect(endpoint.path == "/users/login")
         #expect(endpoint.method == .POST)
         #expect(endpoint.body != nil)
-        #expect(endpoint.encryption == .requestAndResponse)
     }
 
     @Test func registerEndpoint() {
@@ -31,7 +35,6 @@ struct LoginEndpointsTests {
         #expect(endpoint.path == "/auth/register")
         #expect(endpoint.method == .POST)
         #expect(endpoint.body != nil)
-        #expect(endpoint.encryption == .requestAndResponse)
     }
 
     @Test func refreshEndpoint() {
@@ -45,6 +48,5 @@ struct LoginEndpointsTests {
         #expect(endpoint.path == "/auth/refresh")
         #expect(endpoint.method == .POST)
         #expect(endpoint.body != nil)
-        #expect(endpoint.encryption == .requestAndResponse)
     }
 }

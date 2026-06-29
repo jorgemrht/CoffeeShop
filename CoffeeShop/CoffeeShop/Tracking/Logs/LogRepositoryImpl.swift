@@ -1,4 +1,5 @@
 import Foundation
+import Data
 import Domain
 import OSLog
 
@@ -6,20 +7,21 @@ public struct LogRepositoryImpl: Sendable {
 
     private let deviceInfo: DeviceInfo
     private let config: LogConfig
-    private let bundleIdentifier: String?
+    private let subsystem: String
     private let logger: Logger
-    private let session: URLSession
+    private let networkClient: NetworkClient
 
     public init(
         deviceInfo: DeviceInfo,
         config: LogConfig,
-        bundleIdentifier: String? = nil
+        networkClient: NetworkClient,
+        subsystem: String
     ) {
         self.deviceInfo = deviceInfo
         self.config = config
-        self.bundleIdentifier = bundleIdentifier
-        self.logger = Logger(subsystem: bundleIdentifier ?? "", category: "LogRepository")
-        self.session = .shared
+        self.networkClient = networkClient
+        self.subsystem = subsystem
+        self.logger = Logger(subsystem: subsystem, category: "LogRepository")
     }
 }
 
@@ -80,7 +82,7 @@ extension LogRepositoryImpl {
 
         for entry in entries {
             guard let log = entry as? OSLogEntryLog,
-                  log.subsystem.hasPrefix(bundleIdentifier ?? "") else {
+                  log.subsystem.hasPrefix(subsystem) else {
                 continue
             }
 
@@ -95,32 +97,24 @@ extension LogRepositoryImpl {
 // MARK: - URL Session
 
 extension LogRepositoryImpl {
-    private func sendRequest<T: Encodable>(path: String, body: T) async throws -> HTTPURLResponse {
-        let fullURL = config.baseURL.appendingPathComponent(path)
-        var request = URLRequest(url: fullURL)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        encoder.dateEncodingStrategy = .iso8601
-        request.httpBody = try encoder.encode(body)
-
-        let (_, response) = try await session.data(for: request)
-
-        guard let httpResponse = response as? HTTPURLResponse,
-              (200...299).contains(httpResponse.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
-
-        return httpResponse
+    private func sendRequest<T: Encodable>(path: String, body: T) async throws -> APIResponse {
+        try await networkClient.request(
+            APIEndpoint(
+                path: path,
+                method: .POST,
+                body: body
+            )
+        )
     }
 }
 
 // MARK: - Factory
 
 extension LogRepositoryImpl {
-    public static func `default`(bundle: Bundle = .main) -> LogRepositoryImpl {
+    public static func `default`(
+        networkClient: NetworkClient,
+        bundle: Bundle = .main
+    ) -> LogRepositoryImpl {
         let appInfo = AppInfo(bundle: bundle)
         return `default`(
             deviceInfo: .init(
@@ -128,18 +122,21 @@ extension LogRepositoryImpl {
                 buildNumber: appInfo.buildNumber,
                 deviceModel: appInfo.deviceModel
             ),
-            bundleIdentifier: bundle.bundleIdentifier
+            networkClient: networkClient,
+            subsystem: NetworkClientConfiguration.live(bundleIdentifier: bundle.bundleIdentifier).subsystem
         )
     }
 
     public static func `default`(
         deviceInfo: DeviceInfo,
-        bundleIdentifier: String?
+        networkClient: NetworkClient,
+        subsystem: String
     ) -> LogRepositoryImpl {
         LogRepositoryImpl(
             deviceInfo: deviceInfo,
             config: .current,
-            bundleIdentifier: bundleIdentifier
+            networkClient: networkClient,
+            subsystem: subsystem
         )
     }
 }

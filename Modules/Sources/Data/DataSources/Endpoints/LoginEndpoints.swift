@@ -10,7 +10,7 @@ public enum LoginEndpoints {
         switch self {
         case let .login(email, password, deviceId):
             APIEndpoint(
-                path: "/auth/login",
+                path: "/users/login",
                 method: .POST,
                 queryItems: nil,
                 body: LoginRequestDTO(email: email, password: password, deviceId: deviceId)

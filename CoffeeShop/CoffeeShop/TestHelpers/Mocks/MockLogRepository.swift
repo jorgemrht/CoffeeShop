@@ -1,5 +1,6 @@
 #if DEBUG
 import Foundation
+import Data
 import Domain
 
 public struct MockLogRepository {
@@ -15,7 +16,8 @@ public struct MockLogRepository {
         return LogRepositoryImpl(
             deviceInfo: deviceInfo,
             config: .staging,
-            bundleIdentifier: "com.coffeeshop.mock"
+            networkClient: PreviewHelper.mockNetworkClient,
+            subsystem: "com.coffeeshop.mock"
         )
     }
 }

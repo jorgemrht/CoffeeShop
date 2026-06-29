@@ -2,34 +2,48 @@ import Foundation
 import Domain
 import OSLog
 
-// HTTP/2 Multiplexing: https://developer.apple.com/videos/play/wwdc2024/10064/
-// TLS 1.3 Adoption: https://support.apple.com/guide/security/tls-security-sec100a75d12/web
-// Typed Throws: https://github.com/apple/swift-evolution/blob/main/proposals/0413-typed-throws.md
-// Structured Logging: https://developer.apple.com/videos/play/wwdc2023/10226/
-
 public final class NetworkClient: Sendable {
 
-    private let baseURL: String
+    private let baseURL: URL
     private let session: URLSession
     private let interceptors: [RequestInterceptor]
     private let logger: Logger
+    private let tokenStore: TokenStore?
 
     public init(
-        baseURL: String,
+        baseURL: URL,
         session: URLSession = .shared,
         interceptors: [RequestInterceptor],
-        bundleIdentifier: String? = nil
+        subsystem: String
     ) {
         self.baseURL = baseURL
         self.session = session
         self.interceptors = interceptors
         self.logger = Logger(
-            subsystem: bundleIdentifier ?? "modules",
+            subsystem: subsystem,
             category: "NetworkClient"
         )
+        self.tokenStore = nil
+    }
+
+    init(
+        baseURL: URL,
+        session: URLSession = .shared,
+        interceptors: [RequestInterceptor],
+        subsystem: String,
+        tokenStore: TokenStore
+    ) {
+        self.baseURL = baseURL
+        self.session = session
+        self.interceptors = interceptors
+        self.logger = Logger(
+            subsystem: subsystem,
+            category: "NetworkClient"
+        )
+        self.tokenStore = tokenStore
     }
     
-    func request(_ endpoint: APIEndpoint) async throws(APIError) -> APIResponse {
+    public func request(_ endpoint: APIEndpoint) async throws(APIError) -> APIResponse {
         let urlRequest = try endpoint.makeURLRequest(baseURL: baseURL)
         logger.debug("\(endpoint.method.rawValue) \(endpoint.path)")
         do {
@@ -39,7 +53,7 @@ public final class NetworkClient: Sendable {
                 guard let http = urlResponse as? HTTPURLResponse else {
                     throw APIError.unknownError(URLError(.badServerResponse))
                 }
-                return try APIResponse(request: request, response: http, data: data).validate()
+                return APIResponse(request: request, response: http, data: data)
             }
 
             for interceptor in interceptors.reversed() {
@@ -50,8 +64,9 @@ public final class NetworkClient: Sendable {
             }
             
             let response = try await next(urlRequest, session)
-            logger.info("\(endpoint.path) → \(response.statusCode)")
-            return response
+            let validatedResponse = try response.validate()
+            logger.info("\(endpoint.path) → \(validatedResponse.statusCode)")
+            return validatedResponse
 
         } catch let error as APIError {
             logger.error("\(endpoint.path) - \(String(describing: error))")
@@ -64,7 +79,7 @@ public final class NetworkClient: Sendable {
     }
 
     func saveSession(_ session: UserSession) async throws {
-        _ = session
+        try await tokenStore?.save(Token(session: session))
     }
 }
 
@@ -84,10 +99,6 @@ extension URLSession {
         // Cache Policy
         // Source: https://developer.apple.com/documentation/foundation/urlsessionconfiguration/1411655-requestcachepolicy
         config.requestCachePolicy = .useProtocolCachePolicy
-
-        // TLS 1.3 (33% faster handshake than TLS 1.2)
-        // Source: https://support.apple.com/guide/security/tls-security-sec100a75d12/web
-        config.tlsMinimumSupportedProtocolVersion = .TLSv13
 
         // Wait for connectivity instead of failing immediately
         // Source: https://developer.apple.com/documentation/foundation/urlsessionconfiguration/2908812-waitsforconnectivity

@@ -12,7 +12,7 @@ struct APIEndpointTests {
             URLQueryItem(name: "limit", value: "10")
         ]
         let endpoint = APIEndpoint(path: "/shops", method: .GET, queryItems: queryItems)
-        let baseURL = "https://api.example.com"
+        let baseURL = URL(string: "https://api.example.com")!
 
         // When
         let request = try endpoint.makeURLRequest(baseURL: baseURL)
@@ -29,7 +29,7 @@ struct APIEndpointTests {
         }
         let body = TestBody(firstName: "login", lastName: "au")
         let endpoint = APIEndpoint(path: "/auth", method: .POST, body: body)
-        let baseURL = "https://api.example.com"
+        let baseURL = URL(string: "https://api.example.com")!
 
         // When
         let request = try endpoint.makeURLRequest(baseURL: baseURL)

@@ -32,7 +32,7 @@ public struct LoggerInterceptor: RequestInterceptor {
     }
 
     public init(
-        subsystem: String?,
+        subsystem: String,
         category: String,
         logLevel: LogLevel = .info,
         includeHeaders: Bool = false,
@@ -40,8 +40,8 @@ public struct LoggerInterceptor: RequestInterceptor {
         sensitiveHeaders: Set<String> = ["authorization", "token", "api-key", "x-api-key", "cookie", "set-cookie"],
         maxBodySizeKB: Int = 64
     ) {
-        self.logger = Logger(subsystem: subsystem ?? "none", category: category)
-        self.signposter = OSSignposter(subsystem: subsystem ?? "none", category: category)
+        self.logger = Logger(subsystem: subsystem, category: category)
+        self.signposter = OSSignposter(subsystem: subsystem, category: category)
         self.logLevel = logLevel
         self.includeHeaders = includeHeaders
         self.includeBody = includeBody
@@ -217,15 +217,15 @@ public struct LoggerInterceptor: RequestInterceptor {
            let prettyString = String(data: prettyData, encoding: .utf8) {
 
             if wasTruncated {
-                logger.debug("\(label): \(prettyString, privacy: .private) [TRUNCATED: \(data.count) bytes total]")
+                logger.debug("\(label): \(prettyString, privacy: .public) [TRUNCATED: \(data.count) bytes total]")
             } else {
-                logger.debug("\(label): \(prettyString, privacy: .private)")
+                logger.debug("\(label): \(prettyString, privacy: .public)")
             }
         } else if let bodyString = String(data: dataToLog, encoding: .utf8) {
             if wasTruncated {
-                logger.debug("\(label): \(bodyString, privacy: .private) [TRUNCATED: \(data.count) bytes total]")
+                logger.debug("\(label): \(bodyString, privacy: .public) [TRUNCATED: \(data.count) bytes total]")
             } else {
-                logger.debug("\(label): \(bodyString, privacy: .private)")
+                logger.debug("\(label): \(bodyString, privacy: .public)")
             }
         } else {
             logger.debug("\(label): <\(data.count) bytes, binary data>")

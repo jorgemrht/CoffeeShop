@@ -2,14 +2,15 @@
 import SwiftUI
 import Data
 import Domain
+import Macros
 
 public struct PreviewHelper {
     public static var mockNetworkClient: NetworkClient {
         NetworkClient(
-            baseURL: "https://mock.local",
+            baseURL: #URL("https://mock.local"),
             session: .shared,
             interceptors: [],
-            bundleIdentifier: "com.preview"
+            subsystem: "com.preview"
         )
     }
 }

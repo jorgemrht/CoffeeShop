@@ -5,9 +5,21 @@ import OSLog
 public struct AuthRepositoryImpl: AuthRepository, Sendable {
 
     private let networkClient: NetworkClient
+    private let deviceIdentityDataSource: any DeviceIdentityDataSource
 
     public init(networkClient: NetworkClient) {
+        self.init(
+            networkClient: networkClient,
+            deviceIdentityDataSource: .default()
+        )
+    }
+
+    init(
+        networkClient: NetworkClient,
+        deviceIdentityDataSource: any DeviceIdentityDataSource
+    ) {
         self.networkClient = networkClient
+        self.deviceIdentityDataSource = deviceIdentityDataSource
     }
 
     public func login(email: String, password: String) async throws -> UserSession {
@@ -16,7 +28,7 @@ public struct AuthRepositoryImpl: AuthRepository, Sendable {
                 LoginEndpoints.login(
                     email: email,
                     password: password,
-                    deviceId: deviceId
+                    deviceId: try deviceIdentityDataSource.deviceId()
                 ).endpoint
             )
 
@@ -47,8 +59,12 @@ public struct AuthRepositoryImpl: AuthRepository, Sendable {
     }
 }
 
-private extension AuthRepositoryImpl {
-    var deviceId: String {
-        UUID().uuidString
+private extension DeviceIdentityDataSource where Self == DeviceIdentityDataSourceImpl {
+    static func `default`() -> DeviceIdentityDataSourceImpl {
+        let configuration = NetworkClientConfiguration.live(bundleIdentifier: Bundle.main.bundleIdentifier)
+        return DeviceIdentityDataSourceImpl(
+            keychainDataSource: KeychainDataSourceImpl(),
+            service: configuration.keychainService
+        )
     }
 }

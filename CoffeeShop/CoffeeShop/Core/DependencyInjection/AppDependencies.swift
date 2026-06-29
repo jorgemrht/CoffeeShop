@@ -33,7 +33,7 @@ extension AppDependencies {
     public static var live: AppDependencies {
         let bundle = Bundle.main
         let networkClient = NetworkClient.default(bundleIdentifier: bundle.bundleIdentifier)
-        let logRepository = LogRepositoryImpl.default()
+        let logRepository = LogRepositoryImpl.default(networkClient: networkClient)
 
         return AppDependencies(
             networkClient: networkClient,

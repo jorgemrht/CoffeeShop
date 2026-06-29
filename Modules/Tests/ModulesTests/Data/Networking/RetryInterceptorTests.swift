@@ -7,7 +7,8 @@ struct RetryInterceptorTests {
         // Given
         let attempts = AttemptCounter()
         let interceptor = RetryInterceptor(maxAttempts: 2, baseDelay: 0, maxDelay: 0)
-        let request = URLRequest(url: URL(string: "https://api.example.com/retry")!)
+        var request = URLRequest(url: URL(string: "https://api.example.com/retry")!)
+        request.httpMethod = "GET"
 
         let next: @Sendable (URLRequest, URLSession) async throws -> APIResponse = { request, _ in
             let attempt = await attempts.increment()
@@ -36,7 +37,8 @@ struct RetryInterceptorTests {
         // Given
         let attempts = AttemptCounter()
         let interceptor = RetryInterceptor(maxAttempts: 2, baseDelay: 0, maxDelay: 0)
-        let request = URLRequest(url: URL(string: "https://api.example.com/no-retry")!)
+        var request = URLRequest(url: URL(string: "https://api.example.com/no-retry")!)
+        request.httpMethod = "GET"
 
         let next: @Sendable (URLRequest, URLSession) async throws -> APIResponse = { request, _ in
             await attempts.increment()
@@ -62,6 +64,27 @@ struct RetryInterceptorTests {
             #expect(response.statusCode == 400)
         }
 
+        #expect(await attempts.value == 1)
+    }
+
+    @Test func doesNotRetryPostByDefault() async throws {
+        let attempts = AttemptCounter()
+        let interceptor = RetryInterceptor(maxAttempts: 2, baseDelay: 0, maxDelay: 0)
+        var request = URLRequest(url: URL(string: "https://api.example.com/login")!)
+        request.httpMethod = "POST"
+
+        let next: @Sendable (URLRequest, URLSession) async throws -> APIResponse = { request, _ in
+            await attempts.increment()
+            return APIResponse.mock(request: request, statusCode: 500)
+        }
+
+        let response = try await interceptor.intercept(
+            request: request,
+            session: .shared,
+            next: next
+        )
+
+        #expect(response.statusCode == 500)
         #expect(await attempts.value == 1)
     }
 }

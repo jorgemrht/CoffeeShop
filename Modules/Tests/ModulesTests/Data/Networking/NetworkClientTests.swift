@@ -11,7 +11,7 @@ struct NetworkClientTests {
         case expectedAPIError
     }
 
-    @Test func networkClientValidatesHTTPResponsesInsideTerminalRequest() async throws {
+    @Test func networkClientValidatesHTTPResponsesAfterInterceptorChain() async throws {
         // Given
         let url = URL(string: "https://api.example.com/server-error")!
         urlProtocolHandler.withLock {
@@ -28,9 +28,10 @@ struct NetworkClientTests {
 
         let session = URLSession(configuration: .mock)
         let client = NetworkClient(
-            baseURL: "https://api.example.com",
+            baseURL: URL(string: "https://api.example.com")!,
             session: session,
-            interceptors: []
+            interceptors: [],
+            subsystem: "NetworkClientTests"
         )
 
         defer {

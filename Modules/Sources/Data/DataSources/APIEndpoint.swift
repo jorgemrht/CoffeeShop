@@ -21,8 +21,16 @@ public struct APIEndpoint {
 }
 
 extension APIEndpoint {
-    func makeURLRequest(baseURL: String) throws(APIError) -> URLRequest {
-        var components = URLComponents(string: baseURL + path)
+    func makeURLRequest(baseURL: URL) throws(APIError) -> URLRequest {
+        var components = URLComponents(
+            url: baseURL,
+            resolvingAgainstBaseURL: false
+        )
+        let basePath = components?.path.trimmingCharacters(in: CharacterSet(charactersIn: "/")) ?? ""
+        let endpointPath = path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        components?.path = "/" + [basePath, endpointPath]
+            .filter { !$0.isEmpty }
+            .joined(separator: "/")
         components?.queryItems = queryItems
         guard let url = components?.url else { throw APIError.unknownError(URLError(.badURL)) }
         

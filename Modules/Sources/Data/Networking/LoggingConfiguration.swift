@@ -47,7 +47,7 @@ public struct LoggingConfiguration: Sendable {
     }
 
     public func createInterceptor(
-        subsystem: String?,
+        subsystem: String,
         category: String
     ) -> LoggerInterceptor {
         LoggerInterceptor(
